@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import serviceAccount from "../env/serviceAccountKey.json";
+import serviceAccount from "../env/serviceAccountKey";
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),

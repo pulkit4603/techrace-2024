@@ -5,6 +5,8 @@
     "main": "index.js",
     "scripts": {
         "dev": "nodemon --exec babel-node src/index.js",
+        "start": "babel src -d dist && node dist/index.js",
+        "build": "babel src -d dist",
         "format": "prettier --write \"src/**/*.js\""
     },
     "keywords": [],
