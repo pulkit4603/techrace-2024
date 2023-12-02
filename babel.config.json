@@ -14,10 +14,7 @@
             }
         ]
     ],
-    "plugin": [
-        "@babel/plugin-transform-modules-commonjs",
-        {
-            "allowTopLevelThis": true
-        }
+    "plugins": [
+        "@babel/plugin-transform-modules-commonjs"
     ]
 }
