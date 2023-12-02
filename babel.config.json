@@ -1,17 +1,23 @@
 {
     "presets": [
-      [
-        "@babel/preset-env",
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "edge": "17",
+                    "firefox": "60",
+                    "chrome": "67",
+                    "safari": "11.1"
+                },
+                "useBuiltIns": "usage",
+                "corejs": "3.6.5"
+            }
+        ]
+    ],
+    "plugin": [
+        "@babel/plugin-transform-modules-commonjs",
         {
-          "targets": {
-            "edge": "17",
-            "firefox": "60",
-            "chrome": "67",
-            "safari": "11.1"
-          },
-          "useBuiltIns": "usage",
-          "corejs": "3.6.5"
+            "allowTopLevelThis": true
         }
-      ]
     ]
-  }
+}

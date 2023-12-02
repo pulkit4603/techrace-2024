@@ -1,32 +1,35 @@
 {
-  "name": "techrace-2024",
-  "version": "1.0.0",
-  "description": "Techrace 2024 official app",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon ./src/index.js",
-    "format": "prettier --write \"src/**/*.js\""
-  },
-  "keywords": [],
-  "author": "Gay Man 1&2",
-  "license": "ISC",
-  "devDependencies": {
-    "@babel/cli": "^7.23.4",
-    "@babel/core": "^7.23.3",
-    "@babel/preset-env": "^7.23.3",
-    "eslint": "^8.54.0",
-    "jest": "^29.7.0",
-    "nodemon": "^3.0.1",
-    "prettier": "^3.1.0"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "firebase": "^10.7.0",
-    "firebase-admin": "^11.11.1",
-    "jsonwebtoken": "^9.0.2",
-    "moment-timezone": "^0.5.43",
-    "multer": "^1.4.5-lts.1"
-  }
+    "name": "techrace-2024",
+    "version": "1.0.0",
+    "description": "Techrace 2024 official app",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon --exec babel-node --require @babel/register src/index.js",
+        "format": "prettier --write \"src/**/*.js\""
+    },
+    "keywords": [],
+    "author": "Gay Man 1&2",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/cli": "^7.23.4",
+        "@babel/core": "^7.23.5",
+        "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+        "@babel/preset-env": "^7.23.5",
+        "@babel/register": "^7.22.15",
+        "babel-jest": "^29.7.0",
+        "eslint": "^8.54.0",
+        "jest": "^29.7.0",
+        "nodemon": "^3.0.1",
+        "prettier": "^3.1.0"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "firebase": "^10.7.0",
+        "firebase-admin": "^11.11.1",
+        "jsonwebtoken": "^9.0.2",
+        "moment-timezone": "^0.5.43",
+        "multer": "^1.4.5-lts.1"
+    }
 }
