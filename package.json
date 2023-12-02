@@ -4,7 +4,7 @@
     "description": "Techrace 2024 official app",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon --exec babel-node --require @babel/register src/index.js",
+        "start": "nodemon --exec babel-node src/index.js",
         "format": "prettier --write \"src/**/*.js\""
     },
     "keywords": [],
