@@ -10,5 +10,5 @@ app.listen(port, () => {
 });
 
 app.get("/gay", (req, res) => {
-    res.json({ gayestManAlive: gayMan });
+    res.json({ gayestManAlive: gayMan});
 });
