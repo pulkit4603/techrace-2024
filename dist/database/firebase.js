@@ -5,10 +5,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 var _firebaseAdmin = _interopRequireDefault(require("firebase-admin"));
-var _serviceAccountKey = _interopRequireDefault(require("../env/serviceAccountKey"));
+var _dotenv = _interopRequireDefault(require("dotenv"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+// import serviceAccount from "../../env/serviceAccountKey.json";
+var serviceAccount = process.env.SERVICE_ACCOUNT;
 _firebaseAdmin["default"].initializeApp({
-  credential: _firebaseAdmin["default"].credential.cert(_serviceAccountKey["default"]),
+  credential: _firebaseAdmin["default"].credential.cert(serviceAccount),
   databaseURL: "https://techrace-2024-default-rtdb.firebaseio.com"
 });
 var db = _firebaseAdmin["default"].database();
