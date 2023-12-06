@@ -1,4 +1,5 @@
 import express from "express";
+import userRoute from "./routes/user.js";
 const app = express();
 const port = 5000;
 
@@ -10,5 +11,8 @@ app.listen(port, () => {
 });
 
 app.get("/gay", (req, res) => {
-    res.json({ gayestManAlive: gayMan});
+    res.json({ gayestManAlive: gayMan });
 });
+
+app.use("/users", userRoute);
+app.get("/", (req, res) => res.send("v3 1254 Hello from Homepage."));

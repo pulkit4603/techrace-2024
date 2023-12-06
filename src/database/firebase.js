@@ -2,7 +2,7 @@ import admin from "firebase-admin";
 // import * as dotenv from "dotenv";
 // dotenv.config();
 // const serviceAccount = JSON.parse(process.env.TEST_ENV);
-import serviceAccount from "../../env/serviceAccountKey.json";
+import serviceAccount from "../../env/serviceAccountKey.js";
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -10,5 +10,5 @@ admin.initializeApp({
 });
 
 var db = admin.database();
-var ref = db.ref("/");
-export default ref;
+var firebase_db = db.ref("/");
+export default firebase_db;
