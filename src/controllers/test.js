@@ -1,7 +1,7 @@
-import { addUser } from "../models/user_models";
+import { addUser, get_this } from "../models/user-models";
 
 export const newUser = async (req, res) => {
-    const data = req.json;
+    const data = req.body;
     console.log("Request Body:", data);
     if (!data) {
         res.json({ status: "0", message: "EMPTY!" });
@@ -14,4 +14,10 @@ export const newUser = async (req, res) => {
         return;
     }
     res.json({ status: "1", message: "Added Successfully", t_id: data.tid });
+};
+
+export const getUser = async (req, res) => {
+    const tid = req.params.tid;
+    const data = await get_this(tid);
+    res.json({ status: "1", message: "content fetched", tid: tid, data: data });
 };
