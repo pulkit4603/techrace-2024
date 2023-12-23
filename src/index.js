@@ -1,7 +1,9 @@
 import express from "express";
 import userRoute from "./routes/user-routes.js";
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
-const port = 5000;
+const port = process.env.PORT;
 
 import ref from "./database/firebase";
 const gayMan = ref.child("gayman");

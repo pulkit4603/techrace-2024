@@ -10,7 +10,7 @@
         "format": "prettier --write \"src/**/*.js\""
     },
     "keywords": [],
-    "author": "Gay Man 1&2",
+    "author": "Pulkit",
     "license": "ISC",
     "devDependencies": {
         "@babel/cli": "^7.23.4",
