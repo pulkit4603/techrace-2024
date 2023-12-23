@@ -18,4 +18,11 @@ app.get("/gay", (req, res) => {
 });
 
 app.use("/users", userRoute);
-app.get("/", (req, res) => res.send("v3 1254 Hello from Homepage."));
+app.get("/", (req, res) => {
+    const nodeEnv = process.env.NODE_ENV;
+    if (nodeEnv === "production") {
+        console.log("running in production mode");
+    }
+    console.log("hi");
+    res.send("v3 1254 Hello from Homepage.");
+});
