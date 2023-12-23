@@ -2,10 +2,12 @@
 
 var _express = _interopRequireDefault(require("express"));
 var _userRoutes = _interopRequireDefault(require("./routes/user-routes.js"));
+var _dotenv = _interopRequireDefault(require("dotenv"));
 var _firebase = _interopRequireDefault(require("./database/firebase"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+_dotenv["default"].config();
 var app = (0, _express["default"])();
-var port = 5000;
+var port = process.env.PORT;
 var gayMan = _firebase["default"].child("gayman");
 app.use(_express["default"].json());
 app.listen(port, function () {
