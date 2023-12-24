@@ -18,6 +18,7 @@ app.get("/gay", (req, res) => {
 });
 
 app.use("/users", userRoute);
+
 app.get("/", (req, res) => {
     const nodeEnv = process.env.NODE_ENV;
     if (nodeEnv === "production") {
