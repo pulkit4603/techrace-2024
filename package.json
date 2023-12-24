@@ -4,7 +4,7 @@
     "description": "Techrace 2024 official app",
     "main": "index.js",
     "scripts": {
-        "dev": "cross-env NODE_ENV=production nodemon --exec babel-node src/index.js",
+        "dev": "nodemon --exec babel-node src/index.js",
         "start": "cross-env NODE_ENV=production node dist/index.js",
         "build": "babel src -d dist",
         "format": "prettier --write \"src/**/*.js\""
