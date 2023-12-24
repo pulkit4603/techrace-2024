@@ -1,6 +1,13 @@
 import express from "express";
-const router = express.Router();
 import { newUser, getUser } from "../controllers/user-controllers.js";
-router.post("/new_user", newUser); //temp removing auth
-router.get("/get_user/:tid", getUser); //temp removing auth
+
+const router = express.Router();
+
+router.post("/new", newUser);
+router.get("/:tid", getUser);
+
+router.get("/", (req, res) => {
+    res.status(200).send("Hello from User Routes.");
+});
+
 export default router;
