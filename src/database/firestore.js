@@ -14,5 +14,5 @@ const firebaseConfig = {
     apiKey: process.env.FIREBASE_CONFIG_API_KEY,
 };
 
-export const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 export const firestore_db = getFirestore(firebaseApp);
