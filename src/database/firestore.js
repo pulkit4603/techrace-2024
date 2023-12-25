@@ -11,8 +11,8 @@ const firebaseConfig = {
     messagingSenderId: "530110172044",
     appId: "1:530110172044:web:f51f5664915ae26500a4a9",
     measurementId: "G-9S0NKGYY95",
+    apiKey: process.env.FIREBASE_CONFIG_API_KEY,
 };
 
-firebaseConfig.apiKey = process.env.FIREBASE_CONFIG_API_KEY;
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firestore_db = getFirestore(firebaseApp);
