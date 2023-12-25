@@ -28,5 +28,5 @@ admin.initializeApp({
 });
 
 var db = admin.database();
-var firebase_db = db.ref("/");
-export default firebase_db;
+var firebaseRT = db.ref("/");
+export default firebaseRT;

@@ -1,14 +1,14 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { firestore_db } from "../database/firestore.js";
+import { firestore } from "../database/firestore.js";
 
 export const create_this = async (id, data) => {
-    const result = setDoc(doc(firestore_db, "test", id), data);
+    const result = setDoc(doc(firestore, "test", id), data);
     console.log(result);
 };
 
 export const get_this = async (id) => {
     try {
-        const result = await getDoc(doc(firestore_db, "test", id));
+        const result = await getDoc(doc(firestore, "test", id));
         return result.data;
     } catch (error) {
         console.error("Error fetching id: ", error);
