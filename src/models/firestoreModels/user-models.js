@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase-admin/firestore";
 import { firestore } from "../../database";
 
 export const addData = async (dataID, data) => {
@@ -15,7 +15,7 @@ export const getData = async (ID) => {
     }
 };
 
-export const addUser = async (teamID, teamdata) => {
+export const addNewUser = async (teamID, teamdata) => {
     await addData(teamID, teamdata);
     console.log("User Added");
     return 1;
