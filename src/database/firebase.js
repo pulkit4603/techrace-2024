@@ -16,12 +16,6 @@ const serviceAccountKey = {
     client_id: process.env.SERVICE_ACCOUNT_KEY_CLIENT_ID,
 };
 
-serviceAccountKey.private_key = process.env.SERVICE_ACCOUNT_KEY_PRIVATE_KEY;
-serviceAccountKey.private_key_id =
-    process.env.SERVICE_ACCOUNT_KEY_PRIVATE_KEY_ID;
-serviceAccountKey.client_email = process.env.SERVICE_ACCOUNT_KEY_CLIENT_EMAIL;
-serviceAccountKey.client_id = process.env.SERVICE_ACCOUNT_KEY_CLIENT_ID;
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccountKey),
     databaseURL: "https://techrace-2024-default-rtdb.firebaseio.com",
