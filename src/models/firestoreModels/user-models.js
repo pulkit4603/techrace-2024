@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase-admin/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { firestore } from "../../database";
 
 export const addData = async (dataID, data) => {
