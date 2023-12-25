@@ -1,4 +1,4 @@
-import { addUser, get_this } from "../models/user-models";
+import { addUser, get_this } from "../models/firestoreModels/user-models";
 
 export const newUser = async (req, res) => {
     const data = req.body;
