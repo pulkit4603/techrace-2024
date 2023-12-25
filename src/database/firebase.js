@@ -21,6 +21,7 @@ admin.initializeApp({
     databaseURL: "https://techrace-2024-default-rtdb.firebaseio.com",
 });
 
-var db = admin.database();
-var firebaseRT = db.ref("/");
-export default firebaseRT;
+const rtdb = admin.database();
+const db = admin.firestore();
+export const firebaseRT = rtdb.ref("/");
+export const firestore = db;
