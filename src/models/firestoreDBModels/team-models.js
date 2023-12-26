@@ -1,20 +1,14 @@
-import { firestoreDB } from "../../database";
-import { fsAddData } from "./common-models";
-const teamDB = firestoreDB.collection("dev-teams");
+import { fsAddData, fsGetData } from "./common-models";
+const DBName = "dev-teams";
 
 export const fsGetTeamData = async (teamID) => {
-    try {
-        const docRef = teamDB.doc(teamID);
-        const result = await docRef.get();
-        return result.data();
-    } catch (error) {
-        console.error("Error fetching team: ", error);
-    }
+    const result = await fsGetData(teamID, DBName);
+    return result;
 };
 
 export const fsAddNewTeam = async (teamID, teamdata) => {
     try {
-        await fsAddData(teamID, teamdata);
+        await fsAddData(teamID, teamdata, DBName);
         console.log("User Added");
         return 1;
     } catch (error) {
