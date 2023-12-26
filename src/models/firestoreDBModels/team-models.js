@@ -6,7 +6,7 @@ export const fsGetTeamData = async (teamID) => {
     try {
         const docRef = teamDB.doc(teamID);
         const result = await docRef.get();
-        return result.data;
+        return result.data();
     } catch (error) {
         console.error("Error fetching team: ", error);
     }
