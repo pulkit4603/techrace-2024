@@ -2,7 +2,7 @@ import { realtimeDB } from "../../database";
 import { fsGetClueData } from "../firestoreDBModels";
 const teamDB = realtimeDB.ref("dev-teams");
 
-export const rtGetClueID = async (clueIndex, teamID) => {
+export const rtGetClueData = async (clueIndex, teamID) => {
     try {
         const snapShot = await teamDB.child(teamID).once("value");
         const teamData = snapShot.val();

@@ -1,4 +1,4 @@
-import { fsGetData } from "./firestore-models";
+import { fsGetData } from "./common-models.js";
 const DBName = "dev-clues";
 
 export const fsGetClueData = async (clueID) => {
