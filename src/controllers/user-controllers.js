@@ -1,4 +1,4 @@
-import { addNewUser, getData } from "../models/firestoreModels/user-models";
+import { fsAddNewTeam, fsGetTeamData } from "../models";
 
 export const newUser = async (req, res) => {
     const data = req.body;
@@ -7,8 +7,8 @@ export const newUser = async (req, res) => {
         res.json({ status: "0", message: "EMPTY!" });
         return;
     }
-    const tid = data["tid"];
-    const status = await addNewUser(tid, data);
+    const teamid = data["tid"];
+    const status = await fsAddNewTeam(teamid, data);
     if (status == -999) {
         res.json({ status: "0", message: "Error occurred while adding" });
         return;
@@ -18,6 +18,6 @@ export const newUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
     const tid = req.params.tid;
-    const data = await getData(tid);
+    const data = await fsGetTeamData(tid);
     res.json({ status: "1", message: "content fetched", tid: tid, data: data });
 };
