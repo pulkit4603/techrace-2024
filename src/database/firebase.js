@@ -22,6 +22,5 @@ admin.initializeApp({
 });
 
 const rtdb = admin.database();
-const db = admin.firestore();
+export const firestore = admin.firestore();
 export const firebaseRT = rtdb.ref("/");
-export const firestore = db;
