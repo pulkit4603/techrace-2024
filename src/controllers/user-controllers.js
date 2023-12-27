@@ -3,6 +3,7 @@ import {
     fsGetTeamData,
     fsAddClueData,
     fsGetClueData,
+    rtGetTeamData,
 } from "../models";
 
 export const newUser = async (req, res) => {
@@ -66,6 +67,22 @@ export const getClue = async (req, res) => {
             status: "1",
             message: "content fetched",
             clueID: clueID,
+            data: data,
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({ status: "0", message: "Error occurred while fetching" });
+    }
+};
+
+export const rtUser = async (req, res) => {
+    try {
+        const tid = req.params.tid;
+        const data = await rtGetTeamData(tid);
+        res.json({
+            status: "1",
+            message: "content fetched",
+            tid: tid,
             data: data,
         });
     } catch (err) {
