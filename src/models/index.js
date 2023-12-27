@@ -1,6 +1,6 @@
 import { fsAddNewTeam, fsGetTeamData } from "./firestoreDBModels/team-models";
 import {
-    rtGetClueID,
+    rtGetClueData,
     rtGetRoute,
     rtGetTeamData,
     rtUpdateRoute,
@@ -9,7 +9,7 @@ import {
 
 export { fsAddNewTeam, fsGetTeamData };
 export {
-    rtGetClueID,
+    rtGetClueData,
     rtGetRoute,
     rtGetTeamData,
     rtUpdateRoute,
