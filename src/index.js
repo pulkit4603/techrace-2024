@@ -7,7 +7,7 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-const nodeEnv = process.env.NODE_ENV;
+const nodeEnv = process.env.NODE_ENV || "development";
 if (nodeEnv === "production") {
     console.log("Running in Production Mode");
 } else console.log("Running in Development Mode");
@@ -22,5 +22,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
 });
-
-module.exports = app;

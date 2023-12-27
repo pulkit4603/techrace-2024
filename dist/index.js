@@ -7,7 +7,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 _dotenv["default"].config();
 var app = (0, _express["default"])();
 var port = process.env.PORT || 3000;
-var nodeEnv = process.env.NODE_ENV;
+var nodeEnv = process.env.NODE_ENV || "development";
 if (nodeEnv === "production") {
   console.log("Running in Production Mode");
 } else console.log("Running in Development Mode");
@@ -19,4 +19,3 @@ app.get("/", function (req, res) {
 app.listen(port, function () {
   console.log("Server is running on port http://localhost:".concat(port));
 });
-module.exports = app;
