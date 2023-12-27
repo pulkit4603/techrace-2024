@@ -444,15 +444,16 @@ export const powerUp = async (req, res) => {
 };
 
 export const nextClue = async (payload, res) => {
-    let teamID = payload.teamID;
+    let data= payload.body;
+    let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
     let onClueUpPoints = calculatePointsToAdd(
-        payload.askTimestamp,
+        data.askTimestamp,
         teamData.previousClueSolvedAtTime,
     );
     rtUpdateTeamData(teamID, {
         currentClueIndex: teamData.currentClueIndex + 1,
-        previousClueSolvedAtTime: payload.askTimestamp,
+        previousClueSolvedAtTime: data.askTimestamp,
         balance: teamData.balance + onClueUpPoints,
     });
     //@pulkit-gpt to be discussed
@@ -461,6 +462,7 @@ export const nextClue = async (payload, res) => {
         clue: clueData.clue,
         clueType: clueData.clueType,
     };
+    
     res.json({  
         status: "1",
         message: "Clue Data",
