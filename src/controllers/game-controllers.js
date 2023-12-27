@@ -470,7 +470,8 @@ export const nextClue = async (payload, res) => {
     return;
 };
 
-export const gethint = async (teamID, res) => {
+export const gethint = async (req, res) => {
+    let teamID = req.body.teamID;
     let teamData = await rtGetTeamData(teamID);
     let costHint1 = 20;
     let costHint2 = 40;

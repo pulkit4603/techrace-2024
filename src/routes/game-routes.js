@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/powerUp", powerUp);
-router.post("/nextClue", nextClue);
-router.post("/gethint",  gethint);
+router.post("/nextClue", nextClue); 
+router.post("/gethint",  gethint); //lesgo it works
 
 export default router;
