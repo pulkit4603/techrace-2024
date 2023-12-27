@@ -244,7 +244,7 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
     }
 };
 
-//need to correct
+
 //@pulkit-gpt to be discussed
 const skipLocation = async (teamID, res) => {
     const costBeforeDiscount = 600;
@@ -301,7 +301,7 @@ const skipLocation = async (teamID, res) => {
     }
 };
 
-//need to correct
+
 const addLocation = async (teamID, payload, res) => {
     const costBeforeDiscount = 100;
     let teamData = await rtGetTeamData(teamID);
