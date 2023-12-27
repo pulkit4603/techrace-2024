@@ -452,10 +452,65 @@ export const nextClue = async (teamID, res) => {
     //@pulkit-gpt to be discussed
     let teamData = await rtGetTeamData(teamID);
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
+    let clueSent ={
+        clue: clueData.clue,
+        clueType: clueData.clueType,
+    };
     res.json({
         status: "1",
         message: "Clue Data",
-        clueData: clueData,
+        clueData: clueSent,
     });
     return;
 };
+
+export const gethint = async (teamID, res) => {
+    let teamData = await rtGetTeamData(teamID);
+    let costHint1=20;
+    let costHint2=40;
+    let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
+    let hint1Sent ={
+        hint: clueData.hint1,
+        hintType: clueData.hint1Type,
+    };
+    let hint2Sent ={
+        hint: clueData.hint2,
+        hintType: clueData.hint2Type,
+    };
+
+    if(teamData.hint1 ==-999 && teamData.balance>=costHint1){
+        rtUpdateTeamData(teamID, {
+            balance: teamData.balance - costHint1,
+            hint1: clueData.hint1,
+            hint1Type: clueData.hint1Type,
+        });
+
+        res.json({
+            status: "1",
+            message: "Hint 1",
+            hint: hint1Sent,
+        });
+        return;
+    }
+    else if(teamData.hint2 ==-999 && teamData.balance>=costHint2){
+        rtUpdateTeamData(teamID, {
+            balance: teamData.balance - costHint2,
+            hint2: clueData.hint2,
+            hint2Type: clueData.hint2Type,
+        });
+
+        res.json({
+            status: "1",
+            message: "Hint 2",
+            hint: hint2Sent,
+        });
+        return;
+    }
+    else{
+        res.json({
+            status: "0",
+            message: "Insufficient points, or you have already used both hints.",
+        });
+        return;
+    }
+}
