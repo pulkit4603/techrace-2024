@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
     res.status(200).send("Hello from Game Routes.");
 });
 
-router.post("/powerUp/:pid", powerUp);
+router.post("/powerUp", powerUp);
 router.post("/nextClue", nextClue);
 router.post("/gethint",  gethint);
 
