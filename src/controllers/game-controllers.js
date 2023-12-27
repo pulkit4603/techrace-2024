@@ -450,8 +450,9 @@ export const nextClue = async (payload, res) => {
         data.askTimestamp,
         teamData.previousClueSolvedAtTime,
     );
+    teamData.currentClueIndex += 1;
     rtUpdateTeamData(teamID, {
-        currentClueIndex: teamData.currentClueIndex + 1,
+        currentClueIndex: teamData.currentClueIndex,
         previousClueSolvedAtTime: data.askTimestamp,
         balance: teamData.balance + onClueUpPoints,
     });
