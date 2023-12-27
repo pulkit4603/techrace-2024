@@ -1,4 +1,4 @@
-import { fsAddNewTeam, fsGetTeamData, fsAddClueData } from "../models";
+import { fsAddNewTeam, fsGetTeamData, fsAddClueData, fsGetClueData } from "../models";
 
 export const newUser = async (req, res) => {
     const data = req.body;
@@ -50,4 +50,20 @@ export const addClue = async (req, res) => {
         message: "Added Successfully",
         clueID: data.clueID,
     });
+};
+
+export const getClue = async (req, res) => {
+    try {
+        const clueID = req.params.cid;
+        const data = await fsGetClueData(clueID);
+        res.json({
+            status: "1",
+            message: "content fetched",
+            clueID: clueID,
+            data: data,
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({ status: "0", message: "Error occurred while fetching" });
+    }
 };
