@@ -1,8 +1,4 @@
-import{
-    powerUp,
-    nextClue,
-    gethint
-} from "../controllers/game-controller.js";
+import { powerUp, nextClue, gethint } from "../controllers/game-controllers.js";
 
 import express from "express";
 import auth from "../middleware/auth.js";
@@ -12,9 +8,8 @@ router.get("/", (req, res) => {
     res.status(200).send("Hello from Game Routes.");
 });
 
-router.post("/powerUp/:pid",auth, powerUp);
+router.post("/powerUp/:pid", auth, powerUp);
 router.post("/nextClue", auth, nextClue);
 router.post("/gethint", auth, gethint);
-
 
 export default router;
