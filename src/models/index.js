@@ -3,6 +3,7 @@ import {
     fsGetTeamData,
     fsAddData,
     fsGetClueData,
+    fsAddClueData,
 } from "./firestoreDBModels";
 import {
     rtGetClueData,
@@ -20,6 +21,7 @@ export {
     fsAddData,
     //clue models:
     fsGetClueData,
+    fsAddClueData,
 };
 export {
     //only use RTDB:
