@@ -148,7 +148,7 @@ const invisible = async (teamID, payload, res) => {
     rtUpdateTeamData(teamID, {
         isInvisible: true,
         balance: updatedBalance,
-        isMadeInvisibleAtTime: payload.askTimestamp,
+        MadeInvisibleAtTime: payload.askTimestamp,
     });
     futureUndo(teamID, { isInvisible: false }, invisibleTime * 1000);
     res.json({
