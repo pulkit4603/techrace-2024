@@ -10,7 +10,10 @@ const serviceAccountKey = {
     client_x509_cert_url:
         "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-3trbu%40techrace-2024.iam.gserviceaccount.com",
     universe_domain: "googleapis.com",
-    private_key: process.env.SERVICE_ACCOUNT_KEY_PRIVATE_KEY,
+    private_key: process.env.SERVICE_ACCOUNT_KEY_PRIVATE_KEY.replace(
+        /\\n/g,
+        "\n",
+    ),
     private_key_id: process.env.SERVICE_ACCOUNT_KEY_PRIVATE_KEY_ID,
     client_email: process.env.SERVICE_ACCOUNT_KEY_CLIENT_EMAIL,
     client_id: process.env.SERVICE_ACCOUNT_KEY_CLIENT_ID,
