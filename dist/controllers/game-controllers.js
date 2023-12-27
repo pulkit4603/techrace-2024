@@ -83,10 +83,10 @@ var freezeTeam = /*#__PURE__*/function () {
           costOfReverseFreeze = 175;
           cost = isForReverseFreeze ? costOfReverseFreeze : checkIfDiscount(teamData, costBeforeDiscount, "freezeTeamCoupon");
           _context2.next = 8;
-          return (0, _models.rtGetTeamData)(payload.opp_teamID);
+          return (0, _models.rtGetTeamData)(payload.opponentTeamID);
         case 8:
           opponentData = _context2.sent;
-          if (cost > payload.currentBalance) {
+          if (cost > teamData.currentBalance) {
             res.json({
               status: "0",
               message: "Failed: Insufficient points."
@@ -107,7 +107,7 @@ var freezeTeam = /*#__PURE__*/function () {
               isFrozen: true,
               madeFrozenAtTime: payload.askTimestamp
             });
-            updatedBalance = payload.currentBalance - cost;
+            updatedBalance = teamData.currentBalance - cost;
             toUpdateSameTeam = {
               balance: updatedBalance
             };
@@ -141,8 +141,12 @@ var invisible = /*#__PURE__*/function () {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           cost = 130;
-          if (!(cost > payload.currentBalance)) {
-            _context3.next = 4;
+          _context3.next = 3;
+          return (0, _models.rtGetTeamData)(teamID);
+        case 3:
+          teamData = _context3.sent;
+          if (!(cost > teamData.currentBalance)) {
+            _context3.next = 7;
             break;
           }
           res.json({
@@ -150,11 +154,7 @@ var invisible = /*#__PURE__*/function () {
             message: "Insufficient points."
           });
           return _context3.abrupt("return");
-        case 4:
-          _context3.next = 6;
-          return (0, _models.rtGetTeamData)(teamID);
-        case 6:
-          teamData = _context3.sent;
+        case 7:
           if (!teamData.isInvisible) {
             _context3.next = 10;
             break;
@@ -165,10 +165,11 @@ var invisible = /*#__PURE__*/function () {
           });
           return _context3.abrupt("return");
         case 10:
-          updatedBalance = payload.currentBalance - cost;
+          updatedBalance = teamData.currentBalance - cost;
           (0, _models.rtUpdateTeamData)(teamID, {
             isInvisible: true,
-            balance: updatedBalance
+            balance: updatedBalance,
+            isMadeInvisibleAtTime: payload.askTimestamp
           });
           futureUndo(teamID, {
             isInvisible: false
@@ -266,7 +267,7 @@ var reverseFreezeTeam = /*#__PURE__*/function () {
           return (0, _models.rtGetTeamData)(teamID);
         case 3:
           teamData = _context5.sent;
-          if (cost > payload.currentBalance) {
+          if (cost > teamData.currentBalance) {
             res.json({
               status: "0",
               message: "Failed: Insufficient points."
@@ -382,7 +383,7 @@ var addLocation = /*#__PURE__*/function () {
           return (0, _models.rtGetTeamData)(payload.oppTeamID);
         case 7:
           opponentData = _context7.sent;
-          if (!(cost > payload.currentBalance)) {
+          if (!(cost > teamData.currentBalance)) {
             _context7.next = 13;
             break;
           }
@@ -406,7 +407,7 @@ var addLocation = /*#__PURE__*/function () {
             status: "1",
             message: "An extra location has been added to the opponent team."
           });
-          updatedBalance = payload.currentBalance - cost;
+          updatedBalance = teamData.currentBalance - cost;
           (0, _models.rtUpdateTeamData)(payload.oppTeamID, {
             extraLoc: 10 //random number more than 1,
           });
@@ -453,7 +454,7 @@ var mysteryCard = /*#__PURE__*/function () {
           return (0, _models.rtGetTeamData)(payload.oppTeamID);
         case 7:
           opponentData = _context8.sent;
-          if (!(cost > payload.currentBalance)) {
+          if (!(cost > teamData.currentBalance)) {
             _context8.next = 13;
             break;
           }
@@ -477,7 +478,7 @@ var mysteryCard = /*#__PURE__*/function () {
             status: "1",
             message: "A mystery card has been added to the opponent team."
           });
-          updatedBalance = payload.currentBalance - cost;
+          updatedBalance = teamData.currentBalance - cost;
           (0, _models.rtUpdateTeamData)(payload.oppTeamID, {
             mystery: 10 //random number more than 1,
           });
@@ -514,44 +515,37 @@ var powerUp = exports.powerUp = /*#__PURE__*/function () {
         case 0:
           payload = req.body;
           teamID = payload.teamID; //@pulkit4603 to be discussed (-999)
-          if (!(payload.opp_teamID == -999)) {
-            _context9.next = 5;
-            break;
-          }
-          _context9.next = 24;
-          break;
-        case 5:
           powerUpID = payload.power_up_id;
           _context9.t0 = powerUpID;
-          _context9.next = _context9.t0 === "1" ? 9 : _context9.t0 === "2" ? 11 : _context9.t0 === "3" ? 13 : _context9.t0 === "4" ? 15 : _context9.t0 === "5" ? 17 : _context9.t0 === "6" ? 19 : _context9.t0 === "7" ? 21 : 23;
+          _context9.next = _context9.t0 === "1" ? 6 : _context9.t0 === "2" ? 8 : _context9.t0 === "3" ? 10 : _context9.t0 === "4" ? 12 : _context9.t0 === "5" ? 14 : _context9.t0 === "6" ? 16 : _context9.t0 === "7" ? 18 : 20;
           break;
-        case 9:
+        case 6:
           freezeTeam(teamID, payload, res, false);
-          return _context9.abrupt("break", 24);
-        case 11:
+          return _context9.abrupt("break", 21);
+        case 8:
           meterOff(teamID, payload, res);
-          return _context9.abrupt("break", 24);
-        case 13:
+          return _context9.abrupt("break", 21);
+        case 10:
           invisible(teamID, payload, res);
-          return _context9.abrupt("break", 24);
-        case 15:
+          return _context9.abrupt("break", 21);
+        case 12:
           reverseFreezeTeam(teamID, payload, res);
-          return _context9.abrupt("break", 24);
-        case 17:
+          return _context9.abrupt("break", 21);
+        case 14:
           skipLocation(teamID, payload, res);
-          return _context9.abrupt("break", 24);
-        case 19:
+          return _context9.abrupt("break", 21);
+        case 16:
           addLocation(teamID, payload, res);
-          return _context9.abrupt("break", 24);
-        case 21:
+          return _context9.abrupt("break", 21);
+        case 18:
           mysteryCard(teamID, payload, res);
-          return _context9.abrupt("break", 24);
-        case 23:
+          return _context9.abrupt("break", 21);
+        case 20:
           res.json({
             status: "0",
             message: "Invalid Power Up"
           });
-        case 24:
+        case 21:
         case "end":
           return _context9.stop();
       }

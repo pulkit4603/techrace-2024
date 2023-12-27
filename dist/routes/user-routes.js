@@ -12,6 +12,7 @@ router.post("/new", _userControllers.newUser);
 router.get("/:tid", _userControllers.getUser);
 router.post("/clues/add", _userControllers.addClue);
 router.get("/clues/:cid", _userControllers.getClue);
+router.get("/rt/:tid", _userControllers.rtUser);
 router.get("/", function (req, res) {
   res.status(200).send("Hello from User Routes.");
 });
