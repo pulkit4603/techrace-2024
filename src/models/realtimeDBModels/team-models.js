@@ -76,12 +76,15 @@ export const rtGetRoute = async (teamID) => {
  */
 export const rtUpdateRoute = async (teamID, routePayload) => {
     return new Promise((resolve, reject) => {
-        realtimeTeamDB.child(teamID).update(routePayload, (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve();
-            }
-        });
+        realtimeTeamDB
+            .child(teamID)
+            .child("route")
+            .update(routePayload, (error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
     });
 };
