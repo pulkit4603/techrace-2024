@@ -14,16 +14,16 @@ const invisibleTime = 10 * 60; //10 minutes
 const meterOffTime = 15 * 60; //15 minutes
 const numberOfRoutes = 5; //confirm with naman
 
-const calculatePointsToAdd = (askTimestamp, prevClueSolvedTimestamp) => {
+const calculatePointsToAdd = (askTimestamp, previousClueSolvedAtTime) => {
     const basePoints = 20;
     const minusFrom = 60;
     console.log(
-        moment(askTimestamp).diff(moment(prevClueSolvedTimestamp), "minutes"),
+        moment(askTimestamp).diff(moment(previousClueSolvedAtTime), "minutes"),
     );
 
     const bonusPoints =
         minusFrom -
-        moment(askTimestamp).diff(prevClueSolvedTimestamp, "minutes");
+        moment(askTimestamp).diff(previousClueSolvedAtTime, "minutes");
 
     console.log("bonusPoints");
     console.log(bonusPoints);
@@ -72,7 +72,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
 
     const cost = isForReverseFreeze
         ? costOfReverseFreeze
-        : checkIfDiscount(teamData, costBeforeDiscount, "freeze_team_coupon");
+        : checkIfDiscount(teamData, costBeforeDiscount, "freezeTeamCoupon");
     let opponentData = await rtGetTeamData(payload.opp_teamID);
 
     if (cost > payload.currentBalance) {
@@ -80,7 +80,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             status: "0",
             message: "Failed: Insufficient points.",
         });
-    } else if (opponentData.isFreezed) {
+    } else if (opponentData.isFrozen) {
         res.json({
             status: "0",
             message:
@@ -89,7 +89,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
     } else if (
         !isForReverseFreeze &&
         moment(payload.askTimestamp).diff(
-            moment(opponentData.freezedOn),
+            moment(opponentData.madeFrozenAtTime),
             "seconds",
         ) <
             freezeTime + freezeCooldownDuration
@@ -101,9 +101,9 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
         });
     } else {
         rtUpdateTeamData(payload.oppTeamID, {
-            freezed_by: isForReverseFreeze ? "-999" : teamID,
-            is_freezed: true,
-            freezed_on: payload.askTimestamp,
+            madeFrozenBy: isForReverseFreeze ? "-999" : teamID,
+            isFrozen: true,
+            madeFrozenAtTime: payload.askTimestamp,
         });
 
         const updatedBalance = payload.currentBalance - cost;
@@ -115,11 +115,11 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             toUpdateSameTeam.freezeTeamCoupon = teamData.freezeTeamCoupon - 1;
         }
         rtUpdateTeamData(teamID, toUpdateSameTeam);
-        futureUndo(payload.oppTeamID, { is_freezed: false }, freezeTime * 1000);
+        futureUndo(payload.oppTeamID, { isFrozen: false }, freezeTime * 1000);
 
         res.json({
             status: "1",
-            message: "Opponent Team Freezed Successfully.",
+            message: "Opponent Team Frozen Successfully.",
             updated_balance: updatedBalance,
         });
     }
@@ -146,7 +146,7 @@ const invisible = async (teamID, payload, res) => {
 
     const updatedBalance = payload.currentBalance - cost;
     rtUpdateTeamData(teamID, {
-        is_invisible: true,
+        isInvisible: true,
         balance: updatedBalance,
     });
     futureUndo(teamID, { isInvisible: false }, invisibleTime * 1000);
@@ -164,7 +164,7 @@ const meterOff = async (teamID, payload, res) => {
     const cost = checkIfDiscount(
         teamData,
         costBeforeDiscount,
-        "meter_off_coupon",
+        "meterOffCoupon",
     );
 
     if (cost > payload.current_balance) {
@@ -174,7 +174,7 @@ const meterOff = async (teamID, payload, res) => {
         });
         return;
     }
-    if (oppTeamData.is_meter_off) {
+    if (oppTeamData.isMeterOff) {
         res.json({
             status: "0",
             message: "Failed: Opponent Team's meter is already off.",
@@ -184,11 +184,7 @@ const meterOff = async (teamID, payload, res) => {
 
     const updated_balance = payload.current_balance - cost;
 
-    futureUndo(
-        payload.opp_teamID,
-        { is_meter_off: false },
-        meterOffTime * 1000,
-    );
+    futureUndo(payload.opp_teamID, { isMeterOff: false }, meterOffTime * 1000);
     res.json({
         status: "1",
         message: "Opponent Team's Meter Turned Off Successfully.",
@@ -196,8 +192,8 @@ const meterOff = async (teamID, payload, res) => {
     });
 
     rtUpdateTeamData(payload.opp_teamID, {
-        is_meter_off: true,
-        meter_off_on: payload.ask_timestamp,
+        isMeterOff: true,
+        madeMeterOffAtTime: payload.ask_timestamp,
     });
 
     let toUpdateSameTeam = {
@@ -205,7 +201,7 @@ const meterOff = async (teamID, payload, res) => {
     };
 
     if (cost == 0) {
-        toUpdateSameTeam.meter_off_coupon = teamData.meter_off_coupon - 1;
+        toUpdateSameTeam.meterOffCoupon = teamData.meterOffCoupon - 1;
     }
 
     console.log("toUpdateSameTeam");
@@ -223,17 +219,20 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
             message: "Failed: Insufficient points.",
         });
     } else if (
-        moment(payload.askTimestamp).diff(teamData.freezedOn, "seconds") > 60
+        moment(payload.askTimestamp).diff(
+            teamData.madeFrozenAtTime,
+            "seconds",
+        ) > 60
     ) {
         res.json({
             status: "0",
             message: "Failed: Can't reverse freeze a team after 60 seconds.",
         });
     } else {
-        payload.oppTeamID = teamData.freezedBy;
+        payload.oppTeamID = teamData.madeFrozenBy;
         rtUpdateTeamData(teamID, {
-            isFreezed: false,
-            freezedOn: moment()
+            isFrozen: false,
+            madeFrozenAtTime: moment()
                 .subtract(
                     freezeTime + freezeCooldownDuration + 60 * 60,
                     "seconds",
@@ -243,7 +242,6 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
         freezeTeam(teamID, payload, res, true);
     }
 };
-
 
 //@pulkit-gpt to be discussed
 const skipLocation = async (teamID, res) => {
@@ -290,7 +288,7 @@ const skipLocation = async (teamID, res) => {
             balance: teamData.currentBalance - cost + onClueUpPoints,
             current_clue_no: teamData.currentClueIndex + 1,
             noSkipUsed: 8, //ranodm number more than 1
-            prevClueSolvedTimestamp: teamData.askTimestamp,
+            previousClueSolvedAtTime: teamData.askTimestamp,
             hint1: "-999",
             hint2: "-999",
         };
@@ -300,7 +298,6 @@ const skipLocation = async (teamID, res) => {
         rtUpdateTeamData(teamID, toUpdate);
     }
 };
-
 
 const addLocation = async (teamID, payload, res) => {
     const costBeforeDiscount = 100;
@@ -410,8 +407,9 @@ const mysteryCard = async (teamID, payload, res) => {
 
 export const powerUp = async (req, res) => {
     const payload = req.body;
-    const teamID = req.teamID;
-    if (payload.opp_teamID != -999) {
+    const teamID = payload.teamID;
+    //@pulkit4603 to be discussed (-999)
+    if (payload.opp_teamID == -999) {
         //block of code
     } else {
         const powerUpID = payload.power_up_id;
@@ -449,15 +447,18 @@ export const powerUp = async (req, res) => {
 export const nextClue = async (payload, res) => {
     let teamID = payload.teamID;
     let teamData = await rtGetTeamData(teamID);
-    let onClueUpPoints = calculatePointsToAdd(payload.askTimestamp, teamData.prevClueSolvedTimestamp);
+    let onClueUpPoints = calculatePointsToAdd(
+        payload.askTimestamp,
+        teamData.previousClueSolvedAtTime,
+    );
     rtUpdateTeamData(teamID, {
         currentClueIndex: teamData.currentClueIndex + 1,
-        prevClueSolvedTimestamp: payload.askTimestamp,
+        previousClueSolvedAtTime: payload.askTimestamp,
         balance: teamData.balance + onClueUpPoints,
     });
     //@pulkit-gpt to be discussed
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
-    let clueSent ={
+    let clueSent = {
         clue: clueData.clue,
         clueType: clueData.clueType,
     };
@@ -471,19 +472,19 @@ export const nextClue = async (payload, res) => {
 
 export const gethint = async (teamID, res) => {
     let teamData = await rtGetTeamData(teamID);
-    let costHint1=20;
-    let costHint2=40;
+    let costHint1 = 20;
+    let costHint2 = 40;
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
-    let hint1Sent ={
+    let hint1Sent = {
         hint: clueData.hint1,
         hintType: clueData.hint1Type,
     };
-    let hint2Sent ={
+    let hint2Sent = {
         hint: clueData.hint2,
         hintType: clueData.hint2Type,
     };
 
-    if(teamData.hint1 ==-999 && teamData.balance>=costHint1){
+    if (teamData.hint1 == -999 && teamData.balance >= costHint1) {
         rtUpdateTeamData(teamID, {
             balance: teamData.balance - costHint1,
             hint1: clueData.hint1,
@@ -496,8 +497,7 @@ export const gethint = async (teamID, res) => {
             hint: hint1Sent,
         });
         return;
-    }
-    else if(teamData.hint2 ==-999 && teamData.balance>=costHint2){
+    } else if (teamData.hint2 == -999 && teamData.balance >= costHint2) {
         rtUpdateTeamData(teamID, {
             balance: teamData.balance - costHint2,
             hint2: clueData.hint2,
@@ -510,12 +510,13 @@ export const gethint = async (teamID, res) => {
             hint: hint2Sent,
         });
         return;
-    }
-    else{
+    } else {
         res.json({
             status: "0",
-            message: "Insufficient points, or you have already used both hints.",
+            message:
+                //@pulkit-gpt to be discussed
+                "Insufficient points, or you have already used both hints.",
         });
         return;
     }
-}
+};
