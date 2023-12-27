@@ -1,4 +1,9 @@
-import { fsAddNewTeam, fsGetTeamData, fsAddClueData, fsGetClueData } from "../models";
+import {
+    fsAddNewTeam,
+    fsGetTeamData,
+    fsAddClueData,
+    fsGetClueData,
+} from "../models";
 
 export const newUser = async (req, res) => {
     const data = req.body;
@@ -7,8 +12,9 @@ export const newUser = async (req, res) => {
         res.json({ status: "0", message: "EMPTY!" });
         return;
     }
-    const teamid = data["tid"];
-    const status = await fsAddNewTeam(teamid, data);
+    const teamID = data["teamID"];
+    delete data["teamID"];
+    const status = await fsAddNewTeam(teamID, data);
     if (status == -999) {
         res.json({ status: "0", message: "Error occurred while adding" });
         return;
