@@ -48,7 +48,7 @@ const swap = (arr, i, j) => {
 
 const objectify = (arr, n) => {
     let obj = {};
-    for (let i = 0; i < n; i++) {
+    for (let i = 1; i <= n; i++) {
         obj[`c${i}`] = arr[i];
     }
     return obj;
