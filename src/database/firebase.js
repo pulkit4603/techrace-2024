@@ -22,5 +22,6 @@ admin.initializeApp({
 });
 
 const rtdb = admin.database();
-export const firestore = admin.firestore();
-export const firebaseRT = rtdb.ref("/");
+export const firestoreDB = admin.firestore();
+export const realtimeDB = rtdb.ref("/");
+export const realtimeTeamDB = rtdb.ref("/dev-teams");

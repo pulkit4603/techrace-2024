@@ -1,3 +1,3 @@
-import { firebaseRT, firestore } from "./firebase";
-export const realtimeDB = firebaseRT;
-export const firestoreDB = firestore;
+import { realtimeTeamDB, realtimeDB, firestoreDB } from "./firebase";
+
+export { realtimeTeamDB, realtimeDB, firestoreDB };
