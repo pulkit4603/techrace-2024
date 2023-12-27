@@ -457,12 +457,12 @@ export const nextClue = async (payload, res) => {
         balance: teamData.balance + onClueUpPoints,
     });
     //@pulkit-gpt to be discussed
-    let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
+    let clueData = await rtGetClueData(teamData.currentClueIndex, teamID);
     let clueSent = {
         clue: clueData.clue,
         clueType: clueData.clueType,
     };
-    res.json({
+    res.json({  
         status: "1",
         message: "Clue Data",
         clueData: clueSent,
