@@ -73,9 +73,9 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
     const cost = isForReverseFreeze
         ? costOfReverseFreeze
         : checkIfDiscount(teamData, costBeforeDiscount, "freezeTeamCoupon");
-    let opponentData = await rtGetTeamData(payload.opp_teamID);
+    let opponentData = await rtGetTeamData(payload.opponentTeamID);
 
-    if (cost > payload.currentBalance) {
+    if (cost > teamData.currentBalance) {
         res.json({
             status: "0",
             message: "Failed: Insufficient points.",
@@ -106,7 +106,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             madeFrozenAtTime: payload.askTimestamp,
         });
 
-        const updatedBalance = payload.currentBalance - cost;
+        const updatedBalance = teamData.currentBalance - cost;
 
         let toUpdateSameTeam = {
             balance: updatedBalance,
@@ -127,7 +127,8 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
 
 const invisible = async (teamID, payload, res) => {
     const cost = 130;
-    if (cost > payload.currentBalance) {
+    let teamData = await rtGetTeamData(teamID);
+    if (cost > teamData.currentBalance) {
         res.json({
             status: "0",
             message: "Insufficient points.",
@@ -135,7 +136,6 @@ const invisible = async (teamID, payload, res) => {
         return;
     }
 
-    let teamData = await rtGetTeamData(teamID);
     if (teamData.isInvisible) {
         res.json({
             status: "0",
@@ -144,10 +144,11 @@ const invisible = async (teamID, payload, res) => {
         return;
     }
 
-    const updatedBalance = payload.currentBalance - cost;
+    const updatedBalance = teamData.currentBalance - cost;
     rtUpdateTeamData(teamID, {
         isInvisible: true,
         balance: updatedBalance,
+        isMadeInvisibleAtTime: payload.askTimestamp,
     });
     futureUndo(teamID, { isInvisible: false }, invisibleTime * 1000);
     res.json({
@@ -213,7 +214,7 @@ const meterOff = async (teamID, payload, res) => {
 const reverseFreezeTeam = async (teamID, payload, res) => {
     const cost = 175;
     let teamData = await rtGetTeamData(teamID);
-    if (cost > payload.currentBalance) {
+    if (cost > teamData.currentBalance) {
         res.json({
             status: "0",
             message: "Failed: Insufficient points.",
@@ -304,7 +305,7 @@ const addLocation = async (teamID, payload, res) => {
     let teamData = await rtGetTeamData(teamID);
     let cost = checkIfDiscount(teamData, costBeforeDiscount, "addLocCoupon");
     let opponentData = await rtGetTeamData(payload.oppTeamID);
-    if (cost > payload.currentBalance) {
+    if (cost > teamData.currentBalance) {
         res.json({
             status: "0",
             message: "Insufficient points.",
@@ -324,7 +325,7 @@ const addLocation = async (teamID, payload, res) => {
             status: "1",
             message: "An extra location has been added to the opponent team.",
         });
-        const updatedBalance = payload.currentBalance - cost;
+        const updatedBalance = teamData.currentBalance - cost;
         rtUpdateTeamData(payload.oppTeamID, {
             extraLoc: 10, //random number more than 1,
         });
@@ -362,7 +363,7 @@ const mysteryCard = async (teamID, payload, res) => {
         "mysteryCardCoupon",
     );
     let opponentData = await rtGetTeamData(payload.oppTeamID);
-    if (cost > payload.currentBalance) {
+    if (cost > teamData.currentBalance) {
         res.json({
             status: "0",
             message: "Insufficient points.",
@@ -382,7 +383,7 @@ const mysteryCard = async (teamID, payload, res) => {
             status: "1",
             message: "A mystery card has been added to the opponent team.",
         });
-        const updatedBalance = payload.currentBalance - cost;
+        const updatedBalance = teamData.currentBalance - cost;
         rtUpdateTeamData(payload.oppTeamID, {
             mystery: 10, //random number more than 1,
         });
@@ -409,9 +410,7 @@ export const powerUp = async (req, res) => {
     const payload = req.body;
     const teamID = payload.teamID;
     //@pulkit4603 to be discussed (-999)
-    if (payload.opp_teamID == -999) {
-        //block of code
-    } else {
+    
         const powerUpID = payload.power_up_id;
         switch (powerUpID) {
             case "1":
@@ -440,7 +439,7 @@ export const powerUp = async (req, res) => {
                     status: "0",
                     message: "Invalid Power Up",
                 });
-        }
+    
     }
 };
 
