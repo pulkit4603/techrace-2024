@@ -410,41 +410,40 @@ export const powerUp = async (req, res) => {
     const payload = req.body;
     const teamID = payload.teamID;
     //@pulkit4603 to be discussed (-999)
-    
-        const powerUpID = payload.power_up_id;
-        switch (powerUpID) {
-            case "1":
-                freezeTeam(teamID, payload, res, false);
-                break;
-            case "2":
-                meterOff(teamID, payload, res);
-                break;
-            case "3":
-                invisible(teamID, payload, res);
-                break;
-            case "4":
-                reverseFreezeTeam(teamID, payload, res);
-                break;
-            case "5":
-                skipLocation(teamID, payload, res);
-                break;
-            case "6":
-                addLocation(teamID, payload, res);
-                break;
-            case "7":
-                mysteryCard(teamID, payload, res);
-                break;
-            default:
-                res.json({
-                    status: "0",
-                    message: "Invalid Power Up",
-                });
-    
+
+    const powerUpID = payload.power_up_id;
+    switch (powerUpID) {
+        case "1":
+            freezeTeam(teamID, payload, res, false);
+            break;
+        case "2":
+            meterOff(teamID, payload, res);
+            break;
+        case "3":
+            invisible(teamID, payload, res);
+            break;
+        case "4":
+            reverseFreezeTeam(teamID, payload, res);
+            break;
+        case "5":
+            skipLocation(teamID, payload, res);
+            break;
+        case "6":
+            addLocation(teamID, payload, res);
+            break;
+        case "7":
+            mysteryCard(teamID, payload, res);
+            break;
+        default:
+            res.json({
+                status: "0",
+                message: "Invalid Power Up",
+            });
     }
 };
 
 export const nextClue = async (payload, res) => {
-    let data= payload.body;
+    let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
     let onClueUpPoints = calculatePointsToAdd(
@@ -457,13 +456,13 @@ export const nextClue = async (payload, res) => {
         balance: teamData.balance + onClueUpPoints,
     });
     //@pulkit-gpt to be discussed
-    let clueData = await rtGetClueData(teamData.currentClueIndex, teamID);
+    let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
     let clueSent = {
         clue: clueData.clue,
         clueType: clueData.clueType,
     };
-    
-    res.json({  
+
+    res.json({
         status: "1",
         message: "Clue Data",
         clueData: clueSent,
