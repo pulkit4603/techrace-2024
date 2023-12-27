@@ -13,7 +13,8 @@ const freezeCooldownDuration = 15 * 60; //15 minutes
 const invisibleTime = 10 * 60; //10 minutes
 const meterOffTime = 15 * 60; //15 minutes
 const numberOfRoutes = 5; //confirm with naman
-export const calculatePointsToAdd = (askTimestamp, prevClueSolvedTimestamp) => {
+
+const calculatePointsToAdd = (askTimestamp, prevClueSolvedTimestamp) => {
     const basePoints = 20;
     const minusFrom = 60;
     console.log(
@@ -445,12 +446,16 @@ export const powerUp = async (req, res) => {
     }
 };
 
-export const nextClue = async (teamID, res) => {
+export const nextClue = async (payload, res) => {
+    let teamID = payload.teamID;
+    let teamData = await rtGetTeamData(teamID);
+    let onClueUpPoints = calculatePointsToAdd(payload.askTimestamp, teamData.prevClueSolvedTimestamp);
     rtUpdateTeamData(teamID, {
         currentClueIndex: teamData.currentClueIndex + 1,
+        prevClueSolvedTimestamp: payload.askTimestamp,
+        balance: teamData.balance + onClueUpPoints,
     });
     //@pulkit-gpt to be discussed
-    let teamData = await rtGetTeamData(teamID);
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
     let clueSent ={
         clue: clueData.clue,
