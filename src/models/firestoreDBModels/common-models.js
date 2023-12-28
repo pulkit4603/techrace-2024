@@ -1,5 +1,12 @@
 import { firestoreDB } from "../../database";
-
+const validDBNames = [
+    "dev-teams",
+    "dev-clues",
+    "dev-routes",
+    "teams",
+    "clues",
+    "routes",
+];
 /**
  * Add a new document to the database or update an existing document's data
  * @param {string} docID unique ID of the document
@@ -11,12 +18,17 @@ import { firestoreDB } from "../../database";
  */
 export const fsAddData = async (docID, docData, DBName) => {
     try {
+        if (!validDBNames.includes(DBName)) {
+            throw new Error("Invalid DB Name");
+        }
         const DB = firestoreDB.collection(DBName);
         const docRef = DB.doc(docID);
         const result = await docRef.set(docData);
         console.log(result);
+        return result;
     } catch (error) {
         console.error("Error adding document data: ", error);
+        throw error;
     }
 };
 
