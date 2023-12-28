@@ -1,0 +1,11 @@
+5 - cheating detected
+4 - incorrect credentials/password
+3 - insufficient points
+2? - cooldown period
+2 - already exists (eg. on opponent)
+2 - already used (by team)
+2 - already logged in
+1 - successful
+0 - (data or team or whatever..) doesn't exist
+-1 - unknown error
+
