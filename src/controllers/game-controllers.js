@@ -334,7 +334,7 @@ const addLocation = async (teamID, payload, res) => {
         }
         rtUpdateTeamData(teamID, toUpdateSameTeam);
         let opponentRoute = await rtGetRoute(payload.opponentTeamID);
-        let opponentRouteArray = opponentRoute.values();
+        let opponentRouteArray = Object.values(opponentRoute);
         let extraRoute =
             opponentData.routeIndex + 1 == numberOfRoutes
                 ? opponentData.routeIndex - 1
