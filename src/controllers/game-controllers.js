@@ -424,7 +424,7 @@ export const powerUp = async (req, res) => {
     const teamID = payload.teamID;
     //@pulkit4603 to be discussed (-999)
 
-    const powerUpID = payload.power_up_id;
+    const powerUpID = payload.powerUpID;
     switch (powerUpID) {
         case "1":
             freezeTeam(teamID, payload, res, false);
