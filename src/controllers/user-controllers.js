@@ -27,6 +27,13 @@ export const getUser = async (req, res) => {
     try {
         const tid = req.params.tid;
         const data = await fsGetTeamData(tid);
+        if (data == 0) {
+            res.json({ status: "0", message: "Team not found" });
+            return;
+        } else if (data == 2) {
+            res.json({ status: "2", message: "Already logged in" });
+            return;
+        }
         res.json({
             status: "1",
             message: "content fetched",
@@ -35,7 +42,7 @@ export const getUser = async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.json({ status: "0", message: "Error occurred while fetching" });
+        res.json({ status: "-1", message: "Error occurred while fetching" });
     }
 };
 
