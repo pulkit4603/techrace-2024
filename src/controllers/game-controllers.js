@@ -334,7 +334,7 @@ const addLocation = async (teamID, payload, res) => {
         }
         rtUpdateTeamData(teamID, toUpdateSameTeam);
         let opponentRoute = await rtGetRoute(payload.opponentTeamID);
-        let opponentRouteArray = opponentRoute.values();
+        let opponentRouteArray = Object.values(opponentRoute);
         let extraRoute =
             opponentData.routeIndex + 1 == numberOfRoutes
                 ? opponentData.routeIndex - 1
@@ -447,6 +447,13 @@ export const nextClue = async (payload, res) => {
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
+    if(teamData.currentClueIndex == 13 ){
+        res.json({
+            status: "0",
+            message: "You have reached the final location.",
+        });
+        return;
+    }
     let onClueUpPoints = calculatePointsToAdd(
         data.askTimestamp,
         teamData.previousClueSolvedAtTime,
