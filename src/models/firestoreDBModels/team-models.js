@@ -3,6 +3,13 @@ const DBName = "dev-teams";
 
 export const fsGetTeamData = async (teamID) => {
     const result = await fsGetData(teamID, DBName);
+    if (result === 0) {
+        console.log("Team not found");
+        return 0; //doesn't exist
+    } else if (result.isLoggedIn == true) {
+        console.log("Already logged in");
+        return 2; //already logged in
+    }
     return result;
 };
 
