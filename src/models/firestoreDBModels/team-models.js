@@ -23,3 +23,14 @@ export const fsAddNewTeam = async (teamID, teamdata) => {
         return -1;
     }
 };
+
+export const fsUpdateTeamData = async (teamID, teamdata) => {
+    try {
+        await fsAddData(teamID, teamdata, DBName);
+        console.log("Data Updated");
+        return 1;
+    } catch (error) {
+        console.error("Error adding team: ", error);
+        return -1;
+    }
+};
