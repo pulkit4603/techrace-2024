@@ -8,6 +8,8 @@ import {
 } from "../models";
 import moment from "moment";
 
+import { objectify, swap } from "../utils";
+
 const freezeTime = 10 * 60; //10 minutes
 const freezeCooldownDuration = 15 * 60; //15 minutes
 const invisibleTime = 10 * 60; //10 minutes
@@ -39,20 +41,6 @@ const futureUndo = async (teamID, payload, freeTimeInMilli) => {
     setTimeout(() => {
         rtUpdateTeamData(teamID, payload);
     }, freeTimeInMilli);
-};
-
-const swap = (arr, i, j) => {
-    let temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-};
-
-const objectify = (arr, n) => {
-    let obj = {};
-    for (let i = 0; i < n; i++) {
-        obj[`c${i + 1}`] = arr[i];
-    }
-    return obj;
 };
 
 const checkIfDiscount = (teamData, costBeforeCoupon, powerUpName) => {
