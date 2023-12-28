@@ -60,9 +60,8 @@ export const login = async (req, res) => {
                 });
                 return;
             }
-            const updationResult = await fsUpdateTeamData(teamID, {
-                isLoggedin: true,
-            });
+            fsTeamData.isLoggedIn = true;
+            const updationResult = await fsUpdateTeamData(teamID, fsTeamData);
             console.log(updationResult); //@pulkit4603 log updationResult for debugging
 
             //@pulkit4603 token setup:
