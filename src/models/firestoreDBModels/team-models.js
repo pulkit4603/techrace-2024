@@ -13,6 +13,6 @@ export const fsAddNewTeam = async (teamID, teamdata) => {
         return 1;
     } catch (error) {
         console.error("Error adding team: ", error);
-        return 0;
+        return -1;
     }
 };
