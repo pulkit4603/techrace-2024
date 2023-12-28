@@ -30,9 +30,6 @@ export const getUser = async (req, res) => {
         if (data == 0) {
             res.json({ status: "0", message: "Team not found" });
             return;
-        } else if (data == 2) {
-            res.json({ status: "2", message: "Already logged in" });
-            return;
         }
         res.json({
             status: "1",
