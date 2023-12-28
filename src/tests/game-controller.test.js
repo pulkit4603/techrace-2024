@@ -204,10 +204,54 @@ describe('nextClue function', () => {
         jest.clearAllMocks();
     });
 
-    test('should return next clue when available', async () => {
+    test('should progress to the next clue and provide new clue data', async () => {
         const teamID = 'exampleTeamID';
         const teamData = {
             teamID,
-            currentClue: 1
-        }
+            currentClueIndex: 3,
+            previousClueSolvedAtTime: 1638417600000, // Assuming a timestamp
+            balance: 100, // Assuming enough balance
+        };
+
+        const mockClueData = {
+            clue: 'This is a clue',
+            clueType: 'Text',
+        };
+
+        // Mocking database functions to return specific data
+        rtGetTeamData.mockResolvedValue(teamData);
+        rtGetClueData.mockResolvedValue(mockClueData);
+
+        const req = {
+            body: {
+                teamID,
+                askTimestamp: 1638417700000, // A timestamp for the next clue request
+            },
+        };
+
+        const res = {
+            json: jest.fn(),
+        };
+
+        await nextClue(req, res);
+
+        // Check if team's data is updated with the next clue's index and timestamp
+        expect(rtUpdateTeamData).toHaveBeenCalledWith(teamID, {
+            currentClueIndex: teamData.currentClueIndex + 1,
+            previousClueSolvedAtTime: req.body.askTimestamp,
+            balance: teamData.balance + expect.any(Number), // Assuming points are added
+        });
+
+        // Check if the response contains the new clue data
+        expect(res.json).toHaveBeenCalledWith({
+            status: '1',
+            message: 'Clue Data',
+            clueData: {
+                clue: mockClueData.clue,
+                clueType: mockClueData.clueType,
+            },
+        });
+    });
+
+    // Add more test cases for edge cases and different scenarios
 });
