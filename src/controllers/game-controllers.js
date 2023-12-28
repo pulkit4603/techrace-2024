@@ -447,6 +447,13 @@ export const nextClue = async (payload, res) => {
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
+    if(teamData.currentClueIndex == 13 ){
+        res.json({
+            status: "0",
+            message: "You have reached the final location.",
+        });
+        return;
+    }
     let onClueUpPoints = calculatePointsToAdd(
         data.askTimestamp,
         teamData.previousClueSolvedAtTime,
