@@ -45,6 +45,9 @@ export const fsGetData = async (docID, DBName) => {
         const DB = firestoreDB.collection(DBName);
         const docRef = DB.doc(docID);
         const result = await docRef.get();
+        if (!result.exists) {
+            return 0; //doesn't exist
+        }
         return result.data();
     } catch (error) {
         console.error("Error fetching document data: ", error);
