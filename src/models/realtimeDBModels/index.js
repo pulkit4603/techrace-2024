@@ -5,6 +5,7 @@ import {
     rtUpdateRoute,
     rtUpdateTeamData,
 } from "./team-models";
+import { rtGetStartDateTime } from "./other-models";
 
 export {
     //only use RTDB:
@@ -12,6 +13,7 @@ export {
     rtGetTeamData,
     rtUpdateRoute,
     rtUpdateTeamData,
+    rtGetStartDateTime,
     //also use firestore:
     rtGetClueData,
 };
