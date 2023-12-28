@@ -359,7 +359,7 @@ const addLocation = async (teamID, payload, res) => {
         );
         rtUpdateRoute(
             payload.opponentTeamID,
-            objectify(opponentRouteArray, 14),
+            objectify(opponentRouteArray, opponentRouteArray.length),
         );
 
         return;
@@ -413,8 +413,8 @@ const mysteryCard = async (teamID, payload, res) => {
             opponentData.currentClueIndex,
             opponentData.currentClueIndex + 1,
         );
-        console.log(objectify(opponentRouteArray, 13));
-        rtUpdateRoute(payload.opponentTeamID, objectify(opponentRouteArray, 3));
+        
+        rtUpdateRoute(payload.opponentTeamID, objectify(opponentRouteArray, opponentRouteArray.length));
         return;
     }
 };
