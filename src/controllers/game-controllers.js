@@ -65,12 +65,12 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
 
     if (cost > teamData.balance) {
         res.json({
-            status: "0",
+            status: "3",
             message: "Failed: Insufficient points.",
         });
     } else if (opponentData.isFrozen) {
         res.json({
-            status: "0",
+            status: "2",
             message:
                 "Failed: Opponent Team is already frozen. Please try again later.",
         });
@@ -83,7 +83,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             freezeTime + freezeCooldownDuration
     ) {
         res.json({
-            status: "0",
+            status: "2",
             message:
                 "Failed: Cooldown period is on of Opponent Team. Please try again later.",
         });
@@ -122,7 +122,7 @@ const invisible = async (teamID, payload, res) => {
     let teamData = await rtGetTeamData(teamID);
     if (cost > teamData.balance) {
         res.json({
-            status: "0",
+            status: "3",
             message: "Insufficient points.",
         });
         return;
@@ -130,7 +130,7 @@ const invisible = async (teamID, payload, res) => {
 
     if (teamData.isInvisible) {
         res.json({
-            status: "0",
+            status: "2",
             message: "You are already invisible",
         });
         return;
@@ -162,14 +162,14 @@ const meterOff = async (teamID, payload, res) => {
 
     if (cost > teamData.balance) {
         res.json({
-            status: "0",
+            status: "3",
             message: "Failed: Insufficient points.",
         });
         return;
     }
     if (opponentTeamData.isMeterOff) {
         res.json({
-            status: "0",
+            status: "2",
             message: "Failed: Opponent Team's meter is already off.",
         });
         return;
@@ -212,7 +212,7 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
     let teamData = await rtGetTeamData(teamID);
     if (cost > teamData.balance) {
         res.json({
-            status: "0",
+            status: "3",
             message: "Failed: Insufficient points.",
         });
     } else if (
@@ -253,7 +253,7 @@ const skipLocation = async (teamID, payload, res) => {
 
     if (cost > teamData.balance) {
         res.json({
-            status: "0",
+            status: "3",
             message: "Insufficient points.",
         });
         return;
@@ -268,7 +268,7 @@ const skipLocation = async (teamID, payload, res) => {
     }
     if (teamData.noSkipUsed >= 1) {
         res.json({
-            status: "0",
+            status: "2",
             message:
                 "You can have Skipped a Location 1 time already.\nYou cannot use this Power Card now.",
         });
@@ -304,7 +304,7 @@ const addLocation = async (teamID, payload, res) => {
     let opponentData = await rtGetTeamData(payload.opponentTeamID);
     if (cost > teamData.balance) {
         res.json({
-            status: "0",
+            status: "3",
             message: "Insufficient points.",
         });
         return;
@@ -313,7 +313,7 @@ const addLocation = async (teamID, payload, res) => {
         opponentData.extraLoc >= 1
     ) {
         res.json({
-            status: "0",
+            status: "2",
             message: "This Power Card cannot be used on this team.",
         });
         return;
@@ -365,7 +365,7 @@ const mysteryCard = async (teamID, payload, res) => {
     let opponentData = await rtGetTeamData(payload.opponentTeamID);
     if (cost > teamData.balance) {
         res.json({
-            status: "0",
+            status: "3",
             message: "Insufficient points.",
         });
         return;
@@ -374,7 +374,7 @@ const mysteryCard = async (teamID, payload, res) => {
         opponentData.mystery >= 1
     ) {
         res.json({
-            status: "0",
+            status: "2",
             message: "This Power Card cannot be used on this team.",
         });
         return;
@@ -401,8 +401,11 @@ const mysteryCard = async (teamID, payload, res) => {
             opponentData.currentClueIndex,
             opponentData.currentClueIndex + 1,
         );
-        
-        rtUpdateRoute(payload.opponentTeamID, objectify(opponentRouteArray, opponentRouteArray.length));
+
+        rtUpdateRoute(
+            payload.opponentTeamID,
+            objectify(opponentRouteArray, opponentRouteArray.length),
+        );
         return;
     }
 };
@@ -447,7 +450,8 @@ export const nextClue = async (payload, res) => {
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
-    if(teamData.currentClueIndex == 13 ){
+    if (teamData.currentClueIndex == 13) {
+        //@pulkit-gpt check for teams w/ extra location
         res.json({
             status: "0",
             message: "You have reached the final location.",
