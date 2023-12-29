@@ -140,7 +140,7 @@ const invisible = async (teamID, payload, res) => {
     rtUpdateTeamData(teamID, {
         isInvisible: true,
         balance: updatedBalance,
-        MadeInvisibleAtTime: payload.askTimestamp,
+        madeInvisibleAtTime: payload.askTimestamp,
     });
     futureUndo(teamID, { isInvisible: false }, invisibleTime * 1000);
     res.json({
@@ -336,7 +336,7 @@ const addLocation = async (teamID, payload, res) => {
         let opponentRoute = await rtGetRoute(payload.opponentTeamID);
         let opponentRouteArray = Object.values(opponentRoute);
         let extraRoute =
-            opponentData.routeIndex + 1 == numberOfRoutes
+            opponentData.routeIndex + 1 > numberOfRoutes
                 ? opponentData.routeIndex - 1
                 : opponentData.routeIndex + 1;
         let extraLocation = `${extraRoute}-${opponentData.currentClueIndex}`;
