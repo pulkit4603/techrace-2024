@@ -1,0 +1,11 @@
+{
+    "clue":"test clue 1.1",
+    "clueID":"1-1",
+    "clueType":"text",
+    "hint1":"test1.1 hint 1",
+    "hint1Type":"text",
+    "hint2":"test1.1 hint 2",
+    "hint2Type":"text",
+    "targetLocationLatitude":"00.000000",
+    "targetLocationLongitude":"00.000000"
+    }
