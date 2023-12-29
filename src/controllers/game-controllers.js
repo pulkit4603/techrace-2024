@@ -16,6 +16,15 @@ const invisibleTime = 10 * 60; //10 minutes
 const meterOffTime = 15 * 60; //15 minutes
 const numberOfRoutes = 2; //confirm with naman
 
+
+// freeze.  125
+// meterOff  100
+// invisible. 130
+// reverseFreeze. 175
+// skip location 225
+// add location 200
+// mysterycard 250
+
 const calculatePointsToAdd = (askTimestamp, previousClueSolvedAtTime) => {
     const basePoints = 20;
     const minusFrom = 60;
@@ -242,7 +251,7 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
 
 //@pulkit-gpt to be discussed
 const skipLocation = async (teamID, payload, res) => {
-    const costBeforeDiscount = 600;
+    const costBeforeDiscount = 225;
 
     let teamData = await rtGetTeamData(teamID);
     const cost = checkIfDiscount(
@@ -298,7 +307,7 @@ const skipLocation = async (teamID, payload, res) => {
 };
 
 const addLocation = async (teamID, payload, res) => {
-    const costBeforeDiscount = 100;
+    const costBeforeDiscount = 200;
     let teamData = await rtGetTeamData(teamID);
     let cost = checkIfDiscount(teamData, costBeforeDiscount, "addLocCoupon");
     let opponentData = await rtGetTeamData(payload.opponentTeamID);
@@ -355,7 +364,7 @@ const addLocation = async (teamID, payload, res) => {
 };
 
 const mysteryCard = async (teamID, payload, res) => {
-    const costBeforeDiscount = 100;
+    const costBeforeDiscount = 250;
     let teamData = await rtGetTeamData(teamID);
     let cost = checkIfDiscount(
         teamData,
