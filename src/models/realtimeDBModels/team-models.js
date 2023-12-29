@@ -14,6 +14,10 @@ export const rtGetClueData = async (clueIndex, teamID) => {
         const route = teamData ? teamData.route : null;
         const clueID = route ? route[clueIndex] : null;
         const clueData = fsGetClueData(clueID);
+        if (clueData == 0) {
+            console.log(`Clue ${clueID} does not exist in firestore.`);
+            return 0;
+        }
         return clueData;
     } catch (error) {
         console.error("Error fetching clueData: ", error);
@@ -28,6 +32,7 @@ export const rtGetTeamData = async (teamID) => {
     try {
         const snapShot = await realtimeTeamDB.child(teamID).once("value");
         if (!snapShot.exists()) {
+            console.log(`Team ${teamID} does not exist in rtDB.`);
             return 0;
         }
         const teamData = snapShot.val();
@@ -49,7 +54,7 @@ export const rtAddNewTeam = async (teamID, payload) => {
     try {
         const snapShot = await realtimeTeamDB.child(teamID).once("value");
         if (snapShot.exists()) {
-            console.log("Team already exists.");
+            console.log(`Team ${teamID} already exists in rtDB.`);
             return 2;
         }
         await realtimeTeamDB.child(teamID).update(payload);
@@ -69,7 +74,7 @@ export const rtUpdateTeamData = async (teamID, payload) => {
     try {
         const snapShot = await realtimeTeamDB.child(teamID).once("value");
         if (!snapShot.exists()) {
-            console.log("Team does not exist.");
+            console.log(`Team ${teamID} does not exist in rtDB.`);
             return 0;
         }
         await realtimeTeamDB.child(teamID).update(payload);
@@ -86,6 +91,10 @@ export const rtUpdateTeamData = async (teamID, payload) => {
 export const rtGetRoute = async (teamID) => {
     try {
         const snapShot = await realtimeTeamDB.child(teamID).once("value");
+        if (!snapShot.exists()) {
+            console.log(`Team ${teamID} does not exist in rtDB.`);
+            return 0;
+        }
         const teamData = snapShot.val();
         return teamData ? teamData.route : null;
     } catch {

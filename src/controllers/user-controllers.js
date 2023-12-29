@@ -5,7 +5,7 @@ import {
     fsGetClueData,
     rtGetTeamData,
     rtAddNewTeam,
-    // rtUpdateTeamData,
+    rtUpdateTeamData,
 } from "../models";
 
 export const fsNewUser = async (req, res) => {
@@ -118,6 +118,32 @@ export const rtNewUser = async (req, res) => {
         const status = await rtAddNewTeam(teamID, data);
         if (status == 2) {
             res.json({ status: "2", message: "Team already exists" });
+            return;
+        }
+        res.json({
+            status: "1",
+            message: "Added Successfully",
+            teamID: data.tid,
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({ status: "-1", message: "Error occurred while adding" });
+    }
+};
+
+export const rtUpdateUser = async (req, res) => {
+    try {
+        const data = req.body;
+        console.log("Request Body:", data);
+        if (!data) {
+            res.json({ status: "0", message: "EMPTY!" });
+            return;
+        }
+        const teamID = data["teamID"];
+        delete data["teamID"];
+        const status = await rtUpdateTeamData(teamID, data);
+        if (status == 0) {
+            res.json({ status: "0", message: "Team doesn't exist" });
             return;
         }
         res.json({
