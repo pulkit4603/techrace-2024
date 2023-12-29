@@ -339,7 +339,7 @@ const addLocation = async (teamID, payload, res) => {
             opponentData.routeIndex + 1 == numberOfRoutes
                 ? opponentData.routeIndex - 1
                 : opponentData.routeIndex + 1;
-        let extraLocation = `${extraRoute}${opponentData.currentClueIndex}`;
+        let extraLocation = `${extraRoute}-${opponentData.currentClueIndex}`;
         opponentRouteArray.splice(
             opponentData.currentClueIndex,
             0,
