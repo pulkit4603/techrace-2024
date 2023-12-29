@@ -4,6 +4,7 @@ import {
     fsAddClueData,
     fsGetClueData,
     rtGetTeamData,
+    rtUpdateTeamData
 } from "../models";
 
 export const newUser = async (req, res) => {
@@ -94,3 +95,21 @@ export const rtUser = async (req, res) => {
         res.json({ status: "0", message: "Error occurred while fetching" });
     }
 };
+
+export const rtNewUser = async (req, res) => {
+    const data = req.body;
+    console.log("Request Body:", data);
+    if (!data) {
+        res.json({ status: "0", message: "EMPTY!" });
+        return;
+    }
+    const teamID = data["teamID"];
+    delete data["teamID"];
+    const status = await rtUpdateTeamData(teamID, data);
+    if (status == -999) {
+        res.json({ status: "0", message: "Error occurred while adding" });
+        return;
+    }
+    res.json({ status: "1", message: "Added Successfully", t_id: data.tid });
+};
+
