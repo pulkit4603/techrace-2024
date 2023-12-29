@@ -283,25 +283,34 @@ const skipLocation = async (teamID, payload, res) => {
         });
         return;
     } else {
+
+        
+        //@pulkit-gpt ask vineet
+        const onClueUpPoints = 20; //base points
+
+        teamData.currentClueIndex += 1;
+        rtUpdateTeamData(teamID, {
+            currentClueIndex: teamData.currentClueIndex,
+            previousClueSolvedAtTime: payload.askTimestamp,
+            balance: teamData.balance + onClueUpPoints,
+            hint1: "-999",
+            hint2: "-999",
+            noSkipUsed: 10, //random number more than 1
+        });
+        //@pulkit-gpt to be discussed
+        let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
+        let clueSent = {
+            clue: clueData.clue,
+            clueType: clueData.clueType,
+            targetLocationLatitude: clueData.targetLocationLatitude,
+            targetLocationLongitude: clueData.targetLocationLongitude,
+        };
+    
         res.json({
             status: "1",
             message: "Location skipped.",
+            clueData: clueSent,
         });
-
-        const onClueUpPoints = 20; //base points
-
-        let toUpdate = {
-            balance: teamData.balance - cost + onClueUpPoints,
-            currentClueIndex: teamData.currentClueIndex + 1,
-            noSkipUsed: 8, //ranodm number more than 1
-            previousClueSolvedAtTime: payload.askTimestamp,
-            hint1: "-999",
-            hint2: "-999",
-        };
-        if (cost == 0) {
-            toUpdate.skipLocationCoupon = teamData.skipLocationCoupon - 1;
-        }
-        rtUpdateTeamData(teamID, toUpdate);
         return;
     }
 };
@@ -476,12 +485,16 @@ export const nextClue = async (payload, res) => {
         currentClueIndex: teamData.currentClueIndex,
         previousClueSolvedAtTime: data.askTimestamp,
         balance: teamData.balance + onClueUpPoints,
+        hint1: "-999",
+        hint2: "-999"
     });
     //@pulkit-gpt to be discussed
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
     let clueSent = {
         clue: clueData.clue,
         clueType: clueData.clueType,
+        targetLocationLatitude: clueData.targetLocationLatitude,
+        targetLocationLongitude: clueData.targetLocationLongitude,
     };
 
     res.json({
