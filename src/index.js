@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/", routes);
 
 app.get("/", (req, res) => {
-    res.status(200).send("Hello from the TECHRACE Homepage.");
+    res.status(200).send("Hello from the TECHRACE Homepage\n- By Pupta & DVD.");
 });
 
 app.listen(port, () => {
