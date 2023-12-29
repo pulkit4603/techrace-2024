@@ -4,6 +4,7 @@ import {
     rtGetTeamData,
     rtUpdateRoute,
     rtUpdateTeamData,
+    rtAddNewTeam,
 } from "./team-models";
 import { rtGetStartDateTime } from "./other-models";
 
@@ -14,6 +15,7 @@ export {
     rtUpdateRoute,
     rtUpdateTeamData,
     rtGetStartDateTime,
+    rtAddNewTeam,
     //also use firestore:
     rtGetClueData,
 };

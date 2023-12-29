@@ -13,6 +13,7 @@ import {
     rtUpdateRoute,
     rtUpdateTeamData,
     rtGetStartDateTime,
+    rtAddNewTeam,
 } from "./realtimeDBModels";
 
 export {
@@ -33,6 +34,7 @@ export {
     rtUpdateRoute,
     rtUpdateTeamData,
     rtGetStartDateTime,
+    rtAddNewTeam,
     //also use firestore:
     rtGetClueData,
 };
