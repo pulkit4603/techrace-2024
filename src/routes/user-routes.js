@@ -1,13 +1,20 @@
 import express from "express";
-import { newUser, getUser, addClue, getClue, rtUser, rtNewUser } from "../controllers/user-controllers.js";
+import {
+    fsNewUser,
+    fsGetUser,
+    fsAddClue,
+    fsGetClue,
+    rtGetUser,
+    rtNewUser,
+} from "../controllers/user-controllers.js";
 
 const router = express.Router();
 
-router.post("/new", newUser);
-router.get("/:tid", getUser);
-router.post("/clues/add", addClue);
-router.get("/clues/:cid", getClue)
-router.get("/rt/:tid", rtUser);
+router.post("/new", fsNewUser);
+router.get("/:tid", fsGetUser);
+router.post("/clues/add", fsAddClue);
+router.get("/clues/:cid", fsGetClue);
+router.get("/rt/:tid", rtGetUser);
 router.post("/rt/add", rtNewUser);
 
 router.get("/", (req, res) => {

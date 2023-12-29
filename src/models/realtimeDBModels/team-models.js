@@ -27,6 +27,9 @@ export const rtGetClueData = async (clueIndex, teamID) => {
 export const rtGetTeamData = async (teamID) => {
     try {
         const snapShot = await realtimeTeamDB.child(teamID).once("value");
+        if (!snapShot.exists()) {
+            return 0;
+        }
         const teamData = snapShot.val();
         return teamData;
     } catch {
@@ -38,19 +41,42 @@ export const rtGetTeamData = async (teamID) => {
 
 /**
  * Takes in a teamID (like 001) and a payload
+ * and adds the team (with the payload) to the rtdb
+ * (Only Creates. Cannot Update Existing)
+ * @returns {Promise} promise that resolves when adding is complete
+ */
+export const rtAddNewTeam = async (teamID, payload) => {
+    try {
+        const snapShot = await realtimeTeamDB.child(teamID).once("value");
+        if (snapShot.exists()) {
+            console.log("Team already exists.");
+            return 2;
+        }
+        await realtimeTeamDB.child(teamID).update(payload);
+    } catch (error) {
+        console.error("Error updating team data: ", error);
+        throw error;
+    }
+};
+
+/**
+ * Takes in a teamID (like 001) and a payload
  * and updates the team data with the payload
+ * (Only updates existing. Cannot Create)
  * @returns {Promise} promise that resolves when the update is complete
  */
 export const rtUpdateTeamData = async (teamID, payload) => {
-    return new Promise((resolve, reject) => {
-        realtimeTeamDB.child(teamID).update(payload, (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve();
-            }
-        });
-    });
+    try {
+        const snapShot = await realtimeTeamDB.child(teamID).once("value");
+        if (!snapShot.exists()) {
+            console.log("Team does not exist.");
+            return 0;
+        }
+        await realtimeTeamDB.child(teamID).update(payload);
+    } catch (error) {
+        console.error("Error updating team data: ", error);
+        throw error;
+    }
 };
 
 /**
