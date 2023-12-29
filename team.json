@@ -1,0 +1,31 @@
+{
+  "balance": 7730,
+  "currentClueIndex": 4,
+  "extraLoc": 10,
+  "hint1": "test5",
+  "hint1Type": "test5",
+  "hint2": "test5",
+  "hint2Type": "test5",
+  "isFrozen": false,
+  "isInvisible": false,
+  "isMeterOff": false,
+  "logoutLocationLatitude": "00.000000",
+  "logoutLocationLongitude": "00.000000",
+  "madeFrozenAtTime": "2023-1-22 15:01:00.000000",
+  "madeFrozenBy": "000",
+  "madeInvisibleAtTime": "2020-01-22 14:44:13.520493",
+  "madeMeterOffAtTime": "2020-01-22 14:44:13.520493",
+  "mystery": 10,
+  "noSkipUsed": 0,
+  "player1": "testName1",
+  "player2": "testName2",
+  "previousClueSolvedAtTime": "2025-1-2 14:55:55.000000",
+  "route": {
+    "c1": "1-1",
+    "c2": "2-1",
+    "c3": "1-3",
+    "c4": "1-2",
+    "c5": "1-4"
+  },
+  "routeIndex": 1
+}
