@@ -15,6 +15,7 @@ export const fsGetTeamData = async (teamID) => {
 
 export const fsAddNewTeam = async (teamID, teamdata) => {
     try {
+        teamdata.isLoggedIn = false;
         await fsAddData(teamID, teamdata, DBName);
         console.log("User Added");
         return 1;
