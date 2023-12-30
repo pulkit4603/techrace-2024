@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import moment from "moment";
-import { timestampFormat } from "../constants";
+const timestampFormat = "YYYY-MM-DD HH:mm:ssZ";
 
 export const fsNewUserSchema = yup.object().shape({
     teamID: yup.string().required(),
