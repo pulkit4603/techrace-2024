@@ -16,7 +16,6 @@ const invisibleTime = 10 * 60; //10 minutes
 const meterOffTime = 15 * 60; //15 minutes
 const numberOfRoutes = 2; //confirm with naman
 
-
 // freeze.  125
 // meterOff  100
 // invisible. 130
@@ -283,8 +282,6 @@ const skipLocation = async (teamID, payload, res) => {
         });
         return;
     } else {
-
-        
         //@pulkit-gpt ask vineet
         const onClueUpPoints = 20; //base points
 
@@ -298,14 +295,17 @@ const skipLocation = async (teamID, payload, res) => {
             noSkipUsed: 10, //random number more than 1
         });
         //@pulkit-gpt to be discussed
-        let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
+        let clueData = await rtGetClueData(
+            `c${teamData.currentClueIndex}`,
+            teamID,
+        );
         let clueSent = {
             clue: clueData.clue,
             clueType: clueData.clueType,
             targetLocationLatitude: clueData.targetLocationLatitude,
             targetLocationLongitude: clueData.targetLocationLongitude,
         };
-    
+
         res.json({
             status: "1",
             message: "Location skipped.",
@@ -486,7 +486,7 @@ export const nextClue = async (payload, res) => {
         previousClueSolvedAtTime: data.askTimestamp,
         balance: teamData.balance + onClueUpPoints,
         hint1: "-999",
-        hint2: "-999"
+        hint2: "-999",
     });
     //@pulkit-gpt to be discussed
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
@@ -505,7 +505,7 @@ export const nextClue = async (payload, res) => {
     return;
 };
 
-export const gethint = async (req, res) => {
+export const getHint = async (req, res) => {
     let teamID = req.body.teamID;
     let teamData = await rtGetTeamData(teamID);
     let costHint1 = 20;
