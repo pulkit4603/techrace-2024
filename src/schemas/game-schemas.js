@@ -8,7 +8,7 @@ export const powerUpSchema = yup.object().shape({
     askTimestamp: yup
         .string()
         .test("timestamp", "Must be a valid timestamp", (value) =>
-            moment(value, timestampFormat, false).isValid(),
+            moment(value, timestampFormat, true).isValid(),
         )
         .required(),
     opponentTeamID: yup.string(),
@@ -19,7 +19,7 @@ export const nextClueSchema = yup.object().shape({
     askTimestamp: yup
         .string()
         .test("timestamp", "Must be a valid timestamp", (value) =>
-            moment(value, timestampFormat, false).isValid(),
+            moment(value, timestampFormat, true).isValid(),
         )
         .required(),
 });

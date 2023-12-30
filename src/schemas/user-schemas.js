@@ -72,18 +72,18 @@ export const rtNewUserSchema = yup.object().shape({
     madeFrozenAtTime: yup
         .string()
         .test("timestamp", "Invalid timestamp", (value) =>
-            moment(value, timestampFormat, false).isValid(),
+            moment(value, timestampFormat, true).isValid(),
         ),
     madeFrozenBy: yup.string().required(),
     madeInvisibleAtTime: yup
         .string()
         .test("timestamp", "Invalid timestamp", (value) =>
-            moment(value, timestampFormat, false).isValid(),
+            moment(value, timestampFormat, true).isValid(),
         ),
     madeMeterOffAtTime: yup
         .string()
         .test("timestamp", "Invalid timestamp", (value) =>
-            moment(value, timestampFormat, false).isValid(),
+            moment(value, timestampFormat, true).isValid(),
         ),
     mystery: yup.number().required(),
     noSkipUsed: yup.number().required(),
@@ -92,7 +92,7 @@ export const rtNewUserSchema = yup.object().shape({
     previousClueSolvedAtTime: yup
         .string()
         .test("timestamp", "Invalid timestamp", (value) =>
-            moment(value, timestampFormat, false).isValid(),
+            moment(value, timestampFormat, true).isValid(),
         )
         .required(),
     route: yup.object().required(),
@@ -130,18 +130,18 @@ export const rtUpdateUserSchema = yup
         madeFrozenAtTime: yup
             .string()
             .test("timestamp", "Invalid timestamp", (value) =>
-                moment(value, timestampFormat, false).isValid(),
+                moment(value, timestampFormat, true).isValid(),
             ),
         madeFrozenBy: yup.string(),
         madeInvisibleAtTime: yup
             .string()
             .test("timestamp", "Invalid timestamp", (value) =>
-                moment(value, timestampFormat, false).isValid(),
+                moment(value, timestampFormat, true).isValid(),
             ),
         madeMeterOffAtTime: yup
             .string()
             .test("timestamp", "Invalid timestamp", (value) =>
-                moment(value, timestampFormat, false).isValid(),
+                moment(value, timestampFormat, true).isValid(),
             ),
         mystery: yup.number(),
         noSkipUsed: yup.number(),
@@ -150,7 +150,7 @@ export const rtUpdateUserSchema = yup
         previousClueSolvedAtTime: yup
             .string()
             .test("timestamp", "Invalid timestamp", (value) =>
-                moment(value, timestampFormat, false).isValid(),
+                moment(value, timestampFormat, true).isValid(),
             ),
         route: yup.object(),
         routeIndex: yup.number(),
