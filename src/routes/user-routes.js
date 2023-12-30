@@ -14,7 +14,7 @@ import {
     rtGetUser,
     rtNewUser,
     rtUpdateUser,
-} from "../controllers/user-controllers.js";
+} from "../controllers";
 
 const router = express.Router();
 
