@@ -3,6 +3,6 @@ export const validateRequest = (schema) => async (req, res, next) => {
         await schema.validate(req.body);
         next();
     } catch (error) {
-        res.json({ status: "-1", message: "Bad Request" });
+        res.json({ status: "-1", message: error.message });
     }
 };
