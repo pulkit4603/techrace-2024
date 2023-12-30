@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import moment from "moment";
-import { timestampFormat } from "./constants.js";
+import { timestampFormat } from "../constants";
 
 export const powerUpSchema = yup.object().shape({
     teamID: yup.string().required(),
