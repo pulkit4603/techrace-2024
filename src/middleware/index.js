@@ -1,2 +1,2 @@
-import { validateSchema } from "./schema-validation.js";
-export { validateSchema };
+import { validateRequest } from "./request-validation.js";
+export { validateRequest };
