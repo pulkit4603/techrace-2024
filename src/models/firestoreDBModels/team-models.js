@@ -6,10 +6,11 @@ export const fsGetTeamData = async (teamID) => {
     if (result === 0) {
         console.log("Team not found");
         return 0; //doesn't exist
-    } else if (result.isLoggedIn == true) {
-        console.log("Already logged in");
-        return 2; //already logged in
     }
+    // else if (result.isLoggedIn == true) { //@pulkit4603 not the job of this function
+    //     console.log("Already logged in");
+    //     return 2;
+    // }
     return result;
 };
 
