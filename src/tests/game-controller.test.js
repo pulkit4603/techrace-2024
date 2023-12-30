@@ -1,4 +1,3 @@
-
 // powerUps.test.js
 import {
     freezeTeam,
@@ -9,28 +8,24 @@ import {
     addLocation,
     mysteryCard,
     nextClue,
-    gethint,
-} from '../controllers/game-controllers';
+    getHint,
+} from "../controllers/game-controllers";
 
-import {
-    rtGetTeamData,
-    rtUpdateTeamData,
-    rtGetClueData,
-} from '../models';
+import { rtGetTeamData, rtUpdateTeamData, rtGetClueData } from "../models";
 
-jest.mock('../models', () => ({
+jest.mock("../models", () => ({
     rtGetTeamData: jest.fn(),
     rtUpdateTeamData: jest.fn(),
     rtGetClueData: jest.fn(),
 }));
 
-describe('gethint function', () => {
+describe("getHint function", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    test('should provide hint1 when available and enough balance', async () => {
-        const teamID = 'exampleTeamID';
+    test("should provide hint1 when available and enough balance", async () => {
+        const teamID = "exampleTeamID";
         const teamData = {
             teamID,
             balance: 50, // Assuming enough balance
@@ -38,11 +33,11 @@ describe('gethint function', () => {
         };
 
         const mockClueData = {
-            clue: 'This is a clue',
-            hint1: 'Hint 1: This is a hint',
-            hint1Type: 'Text',
-            hint2: 'Hint 2: Another hint',
-            hint2Type: 'Text',
+            clue: "This is a clue",
+            hint1: "Hint 1: This is a hint",
+            hint1Type: "Text",
+            hint2: "Hint 2: Another hint",
+            hint2Type: "Text",
         };
 
         // Mocking database functions to return specific data
@@ -59,7 +54,7 @@ describe('gethint function', () => {
             json: jest.fn(),
         };
 
-        await gethint(req, res);
+        await getHint(req, res);
 
         // Check if rtUpdateTeamData is called with the updated hint1 and reduced balance
         expect(rtUpdateTeamData).toHaveBeenCalledWith(teamID, {
@@ -70,8 +65,8 @@ describe('gethint function', () => {
 
         // Check if the response is as expected
         expect(res.json).toHaveBeenCalledWith({
-            status: '1',
-            message: 'Hint 1',
+            status: "1",
+            message: "Hint 1",
             hint: {
                 hint: mockClueData.hint1,
                 hintType: mockClueData.hint1Type,
@@ -79,8 +74,8 @@ describe('gethint function', () => {
         });
     });
 
-    test('should provide hint2 when available and enough balance', async () => {
-        const teamID = 'exampleTeamID';
+    test("should provide hint2 when available and enough balance", async () => {
+        const teamID = "exampleTeamID";
         const teamData = {
             teamID,
             balance: 60, // Assuming enough balance
@@ -89,11 +84,11 @@ describe('gethint function', () => {
         };
 
         const mockClueData = {
-            clue: 'This is a clue',
-            hint1: 'Hint 1: This is a hint',
-            hint1Type: 'Text',
-            hint2: 'Hint 2: Another hint',
-            hint2Type: 'Text',
+            clue: "This is a clue",
+            hint1: "Hint 1: This is a hint",
+            hint1Type: "Text",
+            hint2: "Hint 2: Another hint",
+            hint2Type: "Text",
         };
 
         // Mocking database functions to return specific data
@@ -110,7 +105,7 @@ describe('gethint function', () => {
             json: jest.fn(),
         };
 
-        await gethint(req, res);
+        await getHint(req, res);
 
         // Check if rtUpdateTeamData is called with the updated hint1 and reduced balance
         expect(rtUpdateTeamData).toHaveBeenCalledWith(teamID, {
@@ -122,17 +117,17 @@ describe('gethint function', () => {
 
         // Check if the response is as expected
         expect(res.json).toHaveBeenCalledWith({
-            status: '1',
-            message: 'Hint 2',
+            status: "1",
+            message: "Hint 2",
             hint: {
                 hint: mockClueData.hint2,
                 hintType: mockClueData.hint2Type,
             },
         });
     });
-    
-    test('should return insufficient points if there is not enough balance', async () => {
-        const teamID = 'exampleTeamID';
+
+    test("should return insufficient points if there is not enough balance", async () => {
+        const teamID = "exampleTeamID";
         const teamData = {
             teamID,
             balance: 10, // Assuming insufficient balance
@@ -152,20 +147,21 @@ describe('gethint function', () => {
             json: jest.fn(),
         };
 
-        await gethint(req, res);
+        await getHint(req, res);
 
         // Check if rtUpdateTeamData is not called due to insufficient balance
         expect(rtUpdateTeamData).not.toHaveBeenCalled();
 
         // Check if the response indicates insufficient points
         expect(res.json).toHaveBeenCalledWith({
-            status: '0',
-            message: 'Insufficient points, or you have already used both hints.',
+            status: "0",
+            message:
+                "Insufficient points, or you have already used both hints.",
         });
     });
 
-    test('should return all hints called', async () => {
-        const teamID = 'exampleTeamID';
+    test("should return all hints called", async () => {
+        const teamID = "exampleTeamID";
         const teamData = {
             teamID,
             balance: 10, // Assuming insufficient balance
@@ -186,26 +182,27 @@ describe('gethint function', () => {
             json: jest.fn(),
         };
 
-        await gethint(req, res);
+        await getHint(req, res);
 
         // Check if rtUpdateTeamData is not called due to insufficient balance
         expect(rtUpdateTeamData).not.toHaveBeenCalled();
 
         // Check if the response indicates insufficient points
         expect(res.json).toHaveBeenCalledWith({
-            status: '0',
-            message: 'Insufficient points, or you have already used both hints.',
+            status: "0",
+            message:
+                "Insufficient points, or you have already used both hints.",
         });
     });
 });
 
-describe('nextClue function', () => {
+describe("nextClue function", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    test('should progress to the next clue and provide new clue data', async () => {
-        const teamID = 'exampleTeamID';
+    test("should progress to the next clue and provide new clue data", async () => {
+        const teamID = "exampleTeamID";
         const teamData = {
             teamID,
             currentClueIndex: 3,
@@ -214,8 +211,8 @@ describe('nextClue function', () => {
         };
 
         const mockClueData = {
-            clue: 'This is a clue',
-            clueType: 'Text',
+            clue: "This is a clue",
+            clueType: "Text",
         };
 
         // Mocking database functions to return specific data
@@ -244,8 +241,8 @@ describe('nextClue function', () => {
 
         // Check if the response contains the new clue data
         expect(res.json).toHaveBeenCalledWith({
-            status: '1',
-            message: 'Clue Data',
+            status: "1",
+            message: "Clue Data",
             clueData: {
                 clue: mockClueData.clue,
                 clueType: mockClueData.clueType,
