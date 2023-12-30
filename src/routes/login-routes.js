@@ -1,7 +1,7 @@
 import express from "express";
-import { login } from "../controllers/login-controllers.js";
 import { loginSchema } from "../schemas";
 import { validateRequest } from "../middleware";
+import { login } from "../controllers/login-controllers.js";
 
 const router = express.Router();
 
