@@ -8,7 +8,7 @@ import {
 } from "../models";
 import moment from "moment";
 
-import { objectify, swap } from "../util";
+import { objectify, swap } from "../utils/game-utils";
 
 const freezeTime = 10 * 60; //10 minutes
 const freezeCooldownDuration = 15 * 60; //15 minutes

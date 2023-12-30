@@ -4,7 +4,7 @@ import {
     rtGetStartDateTime,
     rtGetTeamData,
 } from "../models";
-import { distanceFinder } from "../util";
+import { distanceFinder } from "../utils/distance-util";
 
 /* PSEUDOCODE
 if:     teamID is not in teamDB: not found error.
