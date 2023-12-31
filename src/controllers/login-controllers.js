@@ -63,9 +63,6 @@ export const login = async (req, res) => {
                 });
                 return;
             }
-            fsTeamData.isLoggedIn = true;
-            const updationResult = await fsUpdateTeamData(teamID, fsTeamData);
-            console.log(updationResult); //@pulkit4603 log updationResult for debugging
 
             const accessToken = jwt.sign(
                 { teamID: teamID },
@@ -76,7 +73,10 @@ export const login = async (req, res) => {
                 { teamID: teamID },
                 process.env.REFRESH_TOKEN_SECRET,
             );
-            // await fsUpdateTeamData(teamID, { refreshToken: refreshToken }); //@pulkit4603 pending
+            fsTeamData.isLoggedIn = true;
+            fsTeamData.refreshToken = refreshToken; //@pulkit4603 pending
+            const updationResult = await fsUpdateTeamData(teamID, fsTeamData);
+            console.log(updationResult); //@pulkit4603 log updationResult for debugging
 
             const startDateTime = await rtGetStartDateTime();
 
