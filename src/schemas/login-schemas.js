@@ -20,3 +20,7 @@ export const loginSchema = yup.object().shape({
         )
         .required(),
 });
+
+export const refreshSchema = yup.object().shape({
+    refreshToken: yup.string().required(),
+});
