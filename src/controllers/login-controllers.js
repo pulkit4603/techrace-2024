@@ -28,7 +28,7 @@ export const login = async (req, res) => {
                 message: "Team not found.",
             });
             return;
-        } else if (fsTeamData == 2) {
+        } else if (fsTeamData.isLoggedIn == true) {
             res.json({
                 status: "2",
                 message: "Already logged in.",
