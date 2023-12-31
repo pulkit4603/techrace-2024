@@ -1,2 +1,3 @@
 import { validateRequest } from "./request-validation.js";
-export { validateRequest };
+import { auth } from "./auth.js";
+export { validateRequest, auth };
