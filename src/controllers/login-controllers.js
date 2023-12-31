@@ -110,12 +110,18 @@ export const refresh = async (req, res) => {
         if (err) return res.json({ status: "4", message: "Forbidden" });
 
         // Check if the refresh token is in the database // @pulkit4603 pending
+        fsGetTeamData(user.teamID).then((data) => {
+            if (refreshToken !== data.refreshToken) {
+                return res.json({ status: "4", message: "Forbidden" });
+            }
 
-        const newAccessToken = jwt.sign(
-            { userId: user.id },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: "15m" },
-        );
-        res.json({ status: "1", accessToken: newAccessToken });
+            const newAccessToken = jwt.sign(
+                { userId: user.id },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: "15m" },
+            );
+
+            res.json({ status: "1", accessToken: newAccessToken });
+        });
     });
 };
