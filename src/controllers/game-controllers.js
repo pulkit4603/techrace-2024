@@ -8,6 +8,8 @@ import {
 } from "../models";
 import moment from "moment";
 
+import { logger } from "../logger/winston";
+
 import { objectify, swap } from "../utils/game-utils";
 
 const freezeTime = 10 * 60; //10 minutes
@@ -65,7 +67,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
     const teamData = await rtGetTeamData(teamID);
     const costBeforeDiscount = 125;
     const costOfReverseFreeze = 175;
-
+    const opponentTeamID = payload.opponentTeamID;
     const cost = isForReverseFreeze
         ? costOfReverseFreeze
         : checkIfDiscount(teamData, costBeforeDiscount, "freezeTeamCoupon");
@@ -76,12 +78,14 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             status: "3",
             message: "Failed: Insufficient points.",
         });
+        logger.log({"level": "error", "message": `Insufficient points for team ${teamID}`});
     } else if (opponentData.isFrozen) {
         res.json({
             status: "2",
             message:
                 "Failed: Opponent Team is already frozen. Please try again later.",
         });
+        logger.log({"level": "error", "message": `Opponent Team is already frozen for team ${opponentTeamID}`});
     } else if (
         !isForReverseFreeze &&
         moment(payload.askTimestamp).diff(
@@ -95,6 +99,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             message:
                 "Failed: Cooldown period is on of Opponent Team. Please try again later.",
         });
+        logger.log({"level": "error", "message": `Cooldown period is on of Opponent Team for team ${opponentTeamID}`});
     } else {
         rtUpdateTeamData(payload.opponentTeamID, {
             madeFrozenBy: isForReverseFreeze ? "-999" : teamID,
@@ -122,6 +127,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             message: "Opponent Team Frozen Successfully.",
             updated_balance: updatedBalance,
         });
+        logger.log({"level": "info", "message": `Opponent Team ${payload.opponentTeamID} Frozen Successfully by team ${teamID}`});
     }
 };
 
@@ -133,6 +139,7 @@ const invisible = async (teamID, payload, res) => {
             status: "3",
             message: "Insufficient points.",
         });
+        logger.log({"level": "error", "message": `Insufficient points for team ${teamID}`});
         return;
     }
 
@@ -141,6 +148,7 @@ const invisible = async (teamID, payload, res) => {
             status: "2",
             message: "You are already invisible",
         });
+        logger.log({"level": "error", "message": `Team ${teamID} is already invisible`});
         return;
     }
 
@@ -155,11 +163,12 @@ const invisible = async (teamID, payload, res) => {
         status: "1",
         message: "You have become invisible for the next 10 minutes",
     });
+    logger.log({"level": "info", "message": `Team ${teamID} has become invisible`});
 };
 
 const meterOff = async (teamID, payload, res) => {
     const costBeforeDiscount = 100;
-
+    const opponentTeamID = payload.opponentTeamID;
     const opponentTeamData = await rtGetTeamData(payload.opponentTeamID);
     const teamData = await rtGetTeamData(teamID);
     const cost = checkIfDiscount(
@@ -173,6 +182,7 @@ const meterOff = async (teamID, payload, res) => {
             status: "3",
             message: "Failed: Insufficient points.",
         });
+        logger.log({"level": "error", "message": `Insufficient points for team ${teamID}`});
         return;
     }
     if (opponentTeamData.isMeterOff) {
@@ -180,6 +190,7 @@ const meterOff = async (teamID, payload, res) => {
             status: "2",
             message: "Failed: Opponent Team's meter is already off.",
         });
+        logger.log({"level": "error", "message": `Opponent Team's ${opponentTeamID} meter is already off for team ${teamID}`});
         return;
     }
 
@@ -195,7 +206,7 @@ const meterOff = async (teamID, payload, res) => {
         message: "Opponent Team's Meter Turned Off Successfully.",
         updated_balance: updated_balance,
     });
-
+    logger.log({"level": "info", "message": `Opponent Team's ${opponentTeamID} Meter Turned Off Successfully by team ${teamID}`});
     rtUpdateTeamData(payload.opponentTeamID, {
         isMeterOff: true,
         madeMeterOffAtTime: payload.askTimestamp,
@@ -223,6 +234,8 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
             status: "3",
             message: "Failed: Insufficient points.",
         });
+        logger.log({"level": "error", "message": `Insufficient points for team ${teamID}`});
+        return;
     } else if (
         moment(payload.askTimestamp).diff(
             teamData.madeFrozenAtTime,
@@ -233,6 +246,8 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
             status: "0",
             message: "Failed: Can't reverse freeze a team after 60 seconds.",
         });
+        logger.log({"level": "error", "message": `Can't reverse freeze a team after 60 seconds for team ${teamID}`});
+        return;
     } else {
         payload.opponentTeamID = teamData.madeFrozenBy;
         rtUpdateTeamData(teamID, {
@@ -264,6 +279,7 @@ const skipLocation = async (teamID, payload, res) => {
             status: "3",
             message: "Insufficient points.",
         });
+        logger.log({"level": "error", "message": `Insufficient points for team ${teamID}`});
         return;
     }
 
@@ -272,6 +288,7 @@ const skipLocation = async (teamID, payload, res) => {
             status: "0",
             message: "This Power Card cannot be used on final location.",
         });
+        logger.log({"level": "error", "message": `This Power Card cannot be used on final location for team ${teamID}`});
         return;
     }
     if (teamData.noSkipUsed >= 1) {
@@ -280,6 +297,7 @@ const skipLocation = async (teamID, payload, res) => {
             message:
                 "You can have Skipped a Location 1 time already.\nYou cannot use this Power Card now.",
         });
+        logger.log({"level": "error", "message": `You can have Skipped a Location 1 time already for team ${teamID}`});
         return;
     } else {
         //@pulkit-gpt ask vineet
@@ -311,12 +329,14 @@ const skipLocation = async (teamID, payload, res) => {
             message: "Location skipped.",
             clueData: clueSent,
         });
+        logger.log({"level": "info", "message": `Location skipped for team ${teamID}`});
         return;
     }
 };
 
 const addLocation = async (teamID, payload, res) => {
     const costBeforeDiscount = 200;
+    const opponentTeamID = payload.opponentTeamID;
     let teamData = await rtGetTeamData(teamID);
     let cost = checkIfDiscount(teamData, costBeforeDiscount, "addLocCoupon");
     let opponentData = await rtGetTeamData(payload.opponentTeamID);
@@ -325,6 +345,7 @@ const addLocation = async (teamID, payload, res) => {
             status: "3",
             message: "Insufficient points.",
         });
+        logger.log({"level": "error", "message": `Insufficient points for team ${teamID}`});
         return;
     } else if (
         opponentData.currentClueIndex > 12 ||
@@ -334,12 +355,14 @@ const addLocation = async (teamID, payload, res) => {
             status: "2",
             message: "This Power Card cannot be used on this team.",
         });
+        logger.log({"level": "error", "message": `This Power Card cannot be used on this opponent team ${opponentTeamID} by team ${teamID}`});
         return;
     } else {
         res.json({
             status: "1",
             message: "An extra location has been added to the opponent team.",
         });
+        logger.log({"level": "info", "message": `An extra location has been added to the opponent team ${opponentTeamID} by team ${teamID}`});
         const updatedBalance = teamData.balance - cost;
         rtUpdateTeamData(payload.opponentTeamID, {
             extraLoc: 10, //random number more than 1,
@@ -374,6 +397,7 @@ const addLocation = async (teamID, payload, res) => {
 
 const mysteryCard = async (teamID, payload, res) => {
     const costBeforeDiscount = 250;
+    const opponentTeamID = payload.opponentTeamID;
     let teamData = await rtGetTeamData(teamID);
     let cost = checkIfDiscount(
         teamData,
@@ -386,6 +410,7 @@ const mysteryCard = async (teamID, payload, res) => {
             status: "3",
             message: "Insufficient points.",
         });
+        logger.log({"level": "error", "message": `Insufficient points for team ${teamID}`});
         return;
     } else if (
         opponentData.currentClueIndex > 12 ||
@@ -395,12 +420,14 @@ const mysteryCard = async (teamID, payload, res) => {
             status: "2",
             message: "This Power Card cannot be used on this team.",
         });
+        logger.log({"level": "error", "message": `This Power Card cannot be used on this opponent team ${opponentTeamID} by team ${teamID}`});
         return;
     } else {
         res.json({
             status: "1",
             message: "A mystery card has been added to the opponent team.",
         });
+        logger.log({"level": "info", "message": `A mystery card has been added to the opponent team ${opponentTeamID} by team ${teamID}`});
         const updatedBalance = teamData.balance - cost;
         rtUpdateTeamData(payload.opponentTeamID, {
             mystery: 10, //random number more than 1,
@@ -461,6 +488,7 @@ export const powerUp = async (req, res) => {
                 status: "0",
                 message: "Invalid Power Up",
             });
+            logger.log({"level": "error", "message": `Invalid Power Up ${powerUpID} for team ${teamID}`});
     }
 };
 
@@ -474,6 +502,7 @@ export const nextClue = async (payload, res) => {
             status: "0",
             message: "You have reached the final location.",
         });
+        logger.log({"level": "error", "message": `You have reached the final location for team ${teamID}`});
         return;
     }
     let onClueUpPoints = calculatePointsToAdd(
@@ -502,6 +531,7 @@ export const nextClue = async (payload, res) => {
         message: "Clue Data",
         clueData: clueSent,
     });
+    logger.log({"level": "info", "message": `Clue Data for team ${teamID}`});
     return;
 };
 
@@ -532,6 +562,7 @@ export const getHint = async (req, res) => {
             message: "Hint 1",
             hint: hint1Sent,
         });
+        logger.log({"level": "info", "message": `Hint 1 for team ${teamID}`});
         return;
     } else if (teamData.hint2 == -999 && teamData.balance >= costHint2) {
         rtUpdateTeamData(teamID, {
@@ -539,12 +570,12 @@ export const getHint = async (req, res) => {
             hint2: clueData.hint2,
             hint2Type: clueData.hint2Type,
         });
-
         res.json({
             status: "1",
             message: "Hint 2",
             hint: hint2Sent,
         });
+        logger.log({"level": "info", "message": `Hint 2 for team ${teamID}`});
         return;
     } else {
         res.json({
@@ -553,6 +584,7 @@ export const getHint = async (req, res) => {
                 //@pulkit-gpt to be discussed
                 "Insufficient points, or you have already used both hints.",
         });
+        logger.log({"level": "error", "message": `Insufficient points, or you have already used both hints for team ${teamID}`});
         return;
     }
 };
