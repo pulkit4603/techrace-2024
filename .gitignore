@@ -3,3 +3,5 @@
 .vscode/
 /coverage
 dir-tree.txt
+error.log
+logfile.log
