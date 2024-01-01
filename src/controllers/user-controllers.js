@@ -8,6 +8,10 @@ import {
     rtUpdateTeamData,
 } from "../models";
 
+import {
+    logger
+} from "../logger/winston";
+
 export const fsNewUser = async (req, res) => {
     const data = req.body;
     console.log("Request Body:", data);
@@ -23,6 +27,7 @@ export const fsNewUser = async (req, res) => {
         return;
     }
     res.json({ status: "1", message: "Added Successfully", t_id: data.tid });
+    
 };
 
 export const fsGetUser = async (req, res) => {
@@ -39,6 +44,8 @@ export const fsGetUser = async (req, res) => {
             tid: tid,
             data: data,
         });
+        logger.info("User data fetched successfully",res.json);
+
     } catch (err) {
         console.log(err);
         res.json({ status: "-1", message: "Error occurred while fetching" });
