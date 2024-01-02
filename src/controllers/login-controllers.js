@@ -67,7 +67,7 @@ export const login = async (req, res) => {
             const accessToken = jwt.sign(
                 { teamID: teamID },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "15m" },
+                { expiresIn: "1h" },
             );
             const refreshToken = jwt.sign(
                 { teamID: teamID },
@@ -118,7 +118,7 @@ export const refresh = async (req, res) => {
             const newAccessToken = jwt.sign(
                 { userId: user.id },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "15m" },
+                { expiresIn: "1h" },
             );
 
             res.json({ status: "1", accessToken: newAccessToken });
