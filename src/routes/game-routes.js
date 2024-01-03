@@ -1,6 +1,10 @@
 import express from "express";
 import { auth, validateRequest } from "../middleware";
-import { powerUpSchema, nextClueSchema, getHintSchema } from "../validations";
+import {
+    powerUpSchema,
+    nextClueSchema,
+    getHintSchema,
+} from "../request-schemas";
 import { powerUp, nextClue, getHint } from "../controllers";
 //import auth from "../middleware/auth.js";
 
