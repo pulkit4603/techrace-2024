@@ -17,6 +17,18 @@ elseif: team is banned: unauthorized error.
 elseif: [(|askLocn-lastlogoutLocn|) > (legal hvrsn distance)]: cheating detected error.
 else:   login successful. */
 
+/**
+ * Logs in a team.
+ *
+ * @param {Object} req.body - {teamID, password, currLat, currLong}
+ * @param {Object} req.body.currLat - Current latitude
+ * @param {Object} req.body.currLong - Current longitude
+ * @param {Object} res - {status, message, accessToken, refreshToken, player1, player2, startDateTime, currentClueIndex}
+ * @returns {Object}
+ * @returns {Promise<Object>} - A promise that resolves when the response is sent.
+ *
+ * @throws {Error} - {status, message, Error}
+ */
 export const login = async (req, res) => {
     try {
         const data = req.body;
@@ -67,7 +79,7 @@ export const login = async (req, res) => {
             const accessToken = jwt.sign(
                 { teamID: teamID },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "1h" },
+                { expiresIn: "9999h" },
             );
             const refreshToken = jwt.sign(
                 { teamID: teamID },
@@ -118,7 +130,7 @@ export const refresh = async (req, res) => {
             const newAccessToken = jwt.sign(
                 { userId: user.id },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "1h" },
+                { expiresIn: "9999h" },
             );
 
             res.json({ status: "1", accessToken: newAccessToken });
