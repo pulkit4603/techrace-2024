@@ -120,8 +120,6 @@ export const refresh = async (req, res) => {
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.json({ status: "4", message: "Forbidden" });
-
-        // Check if the refresh token is in the database // @pulkit4603 pending
         fsGetTeamData(user.teamID).then((data) => {
             if (refreshToken !== data.refreshToken) {
                 return res.json({ status: "4", message: "Forbidden" });
