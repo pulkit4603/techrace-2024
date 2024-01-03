@@ -76,7 +76,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
     if (cost > teamData.balance) {
         res.json({
             status: "3",
-            message: "Failed: Insufficient points.",
+            message: `${teamID} on ${opponentTeamID}: Failed: Insufficient points.`,
         });
         logger.log({
             level: "error",
@@ -85,8 +85,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
     } else if (opponentData.isFrozen) {
         res.json({
             status: "2",
-            message:
-                "Failed: Opponent Team is already frozen. Please try again later.",
+            message: `${teamID} on ${opponentTeamID}: Failed: Opponent Team is already frozen. Please try again later.`,
         });
         logger.log({
             level: "error",
@@ -102,8 +101,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
     ) {
         res.json({
             status: "2",
-            message:
-                "Failed: Cooldown period is on of Opponent Team. Please try again later.",
+            message: `${teamID} on ${opponentTeamID} Failed: Cooldown period is on of Opponent Team. Please try again later.`,
         });
         logger.log({
             level: "error",
@@ -133,7 +131,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
 
         res.json({
             status: "1",
-            message: "Opponent Team Frozen Successfully.",
+            message: `${teamID} on ${opponentTeamID}: Opponent Team Frozen Successfully.`,
             updated_balance: updatedBalance,
         });
         logger.log({
