@@ -4,7 +4,7 @@ import {
     fsAddClueSchema,
     rtNewUserSchema,
     rtUpdateUserSchema,
-} from "../schemas";
+} from "../validations";
 import { validateRequest } from "../middleware";
 import {
     fsNewUser,
