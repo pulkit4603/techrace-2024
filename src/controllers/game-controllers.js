@@ -8,6 +8,13 @@ import {
 } from "../models";
 import moment from "moment";
 
+import { Mutex } from "async-mutex";
+const mutexes = {};
+for (let i = 0; i <= 400; i++) {
+    let key = String(i).padStart(3, "0");
+    mutexes[key] = new Mutex();
+} // create separate mutexes for each team
+
 import { logger } from "../logger/winston";
 
 import { objectify, swap } from "../utils/game-utils";
@@ -63,16 +70,15 @@ const checkIfDiscount = (teamData, costBeforeCoupon, powerUpName) => {
     return costBeforeCoupon;
 };
 
-const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
+const freezeTeam = async (teamID, payload, res) => {
     const teamData = await rtGetTeamData(teamID);
     const costBeforeDiscount = 125;
     const costOfReverseFreeze = 175;
     const opponentTeamID = payload.opponentTeamID;
+    const isForReverseFreeze = payload.isForReverseFreeze ? true : false;
     const cost = isForReverseFreeze
         ? costOfReverseFreeze
         : checkIfDiscount(teamData, costBeforeDiscount, "freezeTeamCoupon");
-    let opponentData = await rtGetTeamData(payload.opponentTeamID);
-
     if (cost > teamData.balance) {
         res.json({
             status: "3",
@@ -82,7 +88,21 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             level: "error",
             message: `Insufficient points for team ${teamID}`,
         });
-    } else if (opponentData.isFrozen) {
+        return;
+    }
+    let opponentData = await rtGetTeamData(payload.opponentTeamID);
+    if (opponentData.isInvisible) {
+        res.json({
+            status: "2",
+            message: `${teamID} on ${opponentTeamID}: Failed: Opponent Team is invisible.`,
+        });
+        logger.log({
+            level: "error",
+            message: `Opponent Team is invisible for team ${opponentTeamID}`,
+        });
+        return;
+    }
+    if (opponentData.isFrozen) {
         res.json({
             status: "2",
             message: `${teamID} on ${opponentTeamID}: Failed: Opponent Team is already frozen. Please try again later.`,
@@ -108,7 +128,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
             message: `Cooldown period is on of Opponent Team for team ${opponentTeamID}`,
         });
     } else {
-        rtUpdateTeamData(payload.opponentTeamID, {
+        await rtUpdateTeamData(payload.opponentTeamID, {
             madeFrozenBy: isForReverseFreeze ? "-999" : teamID,
             isFrozen: true,
             madeFrozenAtTime: payload.askTimestamp,
@@ -122,7 +142,7 @@ const freezeTeam = async (teamID, payload, res, isForReverseFreeze) => {
         if (cost == 0) {
             toUpdateSameTeam.freezeTeamCoupon = teamData.freezeTeamCoupon - 1;
         }
-        rtUpdateTeamData(teamID, toUpdateSameTeam);
+        await rtUpdateTeamData(teamID, toUpdateSameTeam);
         futureUndo(
             payload.opponentTeamID,
             { isFrozen: false },
@@ -155,8 +175,17 @@ const invisible = async (teamID, payload, res) => {
         });
         return;
     }
-
-    if (teamData.isInvisible) {
+    if (teamData.isFrozen) {
+        res.json({
+            status: "2",
+            message: `You, ${teamID}, are frozen. You cannot use this Power Card.`,
+        });
+        logger.log({
+            level: "error",
+            message: `You are frozen. You cannot use this Power Card (for team ${teamID})`,
+        });
+        return;
+    } else if (teamData.isInvisible) {
         res.json({
             status: "2",
             message: "You are already invisible",
@@ -169,7 +198,7 @@ const invisible = async (teamID, payload, res) => {
     }
 
     const updatedBalance = teamData.balance - cost;
-    rtUpdateTeamData(teamID, {
+    await rtUpdateTeamData(teamID, {
         isInvisible: true,
         balance: updatedBalance,
         madeInvisibleAtTime: payload.askTimestamp,
@@ -188,7 +217,6 @@ const invisible = async (teamID, payload, res) => {
 const meterOff = async (teamID, payload, res) => {
     const costBeforeDiscount = 100;
     const opponentTeamID = payload.opponentTeamID;
-    const opponentTeamData = await rtGetTeamData(payload.opponentTeamID);
     const teamData = await rtGetTeamData(teamID);
     const cost = checkIfDiscount(
         teamData,
@@ -207,6 +235,7 @@ const meterOff = async (teamID, payload, res) => {
         });
         return;
     }
+    const opponentTeamData = await rtGetTeamData(payload.opponentTeamID);
     if (opponentTeamData.isMeterOff) {
         res.json({
             status: "2",
@@ -283,6 +312,7 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
         });
         return;
     } else {
+        payload.isForReverseFreeze = true;
         payload.opponentTeamID = teamData.madeFrozenBy;
         rtUpdateTeamData(teamID, {
             isFrozen: false,
@@ -293,7 +323,7 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
                 )
                 .format(),
         });
-        freezeTeam(teamID, payload, res, true);
+        freezeTeam(teamID, payload, res);
     }
 };
 
@@ -385,7 +415,7 @@ const addLocation = async (teamID, payload, res) => {
     const opponentTeamID = payload.opponentTeamID;
     let teamData = await rtGetTeamData(teamID);
     let cost = checkIfDiscount(teamData, costBeforeDiscount, "addLocCoupon");
-    let opponentData = await rtGetTeamData(payload.opponentTeamID);
+
     if (cost > teamData.balance) {
         res.json({
             status: "3",
@@ -396,17 +426,16 @@ const addLocation = async (teamID, payload, res) => {
             message: `Insufficient points for team ${teamID}`,
         });
         return;
-    } else if (
-        opponentData.currentClueIndex > 12 ||
-        opponentData.extraLoc >= 1
-    ) {
+    }
+    let opponentData = await rtGetTeamData(payload.opponentTeamID);
+    if (opponentData.currentClueIndex > 12 || opponentData.extraLoc >= 1) {
         res.json({
             status: "2",
-            message: "This Power Card cannot be used on this team.",
+            message: "This team already has an extra location.",
         });
         logger.log({
             level: "error",
-            message: `This Power Card cannot be used on this opponent team ${opponentTeamID} by team ${teamID}`,
+            message: `This opponent team ${opponentTeamID} already has an extra location so powercard can't be used by team ${teamID}`,
         });
         return;
     } else {
@@ -459,7 +488,7 @@ const mysteryCard = async (teamID, payload, res) => {
         costBeforeDiscount,
         "mysteryCardCoupon",
     );
-    let opponentData = await rtGetTeamData(payload.opponentTeamID);
+
     if (cost > teamData.balance) {
         res.json({
             status: "3",
@@ -470,10 +499,9 @@ const mysteryCard = async (teamID, payload, res) => {
             message: `Insufficient points for team ${teamID}`,
         });
         return;
-    } else if (
-        opponentData.currentClueIndex > 12 ||
-        opponentData.mystery >= 1
-    ) {
+    }
+    let opponentData = await rtGetTeamData(payload.opponentTeamID);
+    if (opponentData.currentClueIndex > 12 || opponentData.mystery >= 1) {
         res.json({
             status: "2",
             message: "This Power Card cannot be used on this team.",
@@ -522,40 +550,37 @@ const mysteryCard = async (teamID, payload, res) => {
 export const powerUp = async (req, res) => {
     const payload = req.body;
     const teamID = payload.teamID;
-    //@pulkit4603 to be discussed (-999)
-
     const powerUpID = payload.powerUpID;
-    switch (powerUpID) {
-        case "1":
-            freezeTeam(teamID, payload, res, false);
-            break;
-        case "2":
-            meterOff(teamID, payload, res);
-            break;
-        case "3":
-            invisible(teamID, payload, res);
-            break;
-        case "4":
-            reverseFreezeTeam(teamID, payload, res);
-            break;
-        case "5":
-            skipLocation(teamID, payload, res);
-            break;
-        case "6":
-            addLocation(teamID, payload, res);
-            break;
-        case "7":
-            mysteryCard(teamID, payload, res);
-            break;
-        default:
-            res.json({
-                status: "0",
-                message: "Invalid Power Up",
-            });
-            logger.log({
-                level: "error",
-                message: `Invalid Power Up ${powerUpID} for team ${teamID}`,
-            });
+
+    const powerUpFunctions = {
+        1: freezeTeam,
+        2: meterOff,
+        3: invisible,
+        4: reverseFreezeTeam,
+        5: skipLocation,
+        6: addLocation,
+        7: mysteryCard,
+    };
+
+    const powerUpFunction = powerUpFunctions[powerUpID];
+
+    if (powerUpFunction) {
+        const lockID = payload.opponentTeamID ? payload.opponentTeamID : teamID;
+        const release = await mutexes[lockID].acquire(); // lock the mutex
+        try {
+            await powerUpFunction(teamID, payload, res);
+        } finally {
+            release(); // release the mutex
+        }
+    } else {
+        res.json({
+            status: "0",
+            message: "Invalid Power Up",
+        });
+        logger.log({
+            level: "error",
+            message: `Invalid Power Up ${powerUpID} for team ${teamID}`,
+        });
     }
 };
 

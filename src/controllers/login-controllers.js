@@ -67,7 +67,6 @@ export const login = async (req, res) => {
                 currentLocationLatitude,
                 currentLocationLongitude,
             );
-            console.log(distance); //@pulkit4603 log distance for debugging
             if (distance > 250) {
                 res.json({
                     status: "5",
@@ -86,9 +85,8 @@ export const login = async (req, res) => {
                 process.env.REFRESH_TOKEN_SECRET,
             );
             fsTeamData.isLoggedIn = true;
-            fsTeamData.refreshToken = refreshToken; //@pulkit4603 pending
-            const updationResult = await fsUpdateTeamData(teamID, fsTeamData);
-            console.log(updationResult); //@pulkit4603 log updationResult for debugging
+            fsTeamData.refreshToken = refreshToken;
+            await fsUpdateTeamData(teamID, fsTeamData);
 
             const startDateTime = await rtGetStartDateTime();
 
