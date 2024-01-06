@@ -80,12 +80,7 @@ export const login = async (req, res) => {
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: "9999h" },
             );
-            const refreshToken = jwt.sign(
-                { teamID: teamID },
-                process.env.REFRESH_TOKEN_SECRET,
-            );
             fsTeamData.isLoggedIn = true;
-            fsTeamData.refreshToken = refreshToken;
             await fsUpdateTeamData(teamID, fsTeamData);
 
             const startDateTime = await rtGetStartDateTime();
@@ -94,14 +89,12 @@ export const login = async (req, res) => {
                 status: "1",
                 message: "Login successful.",
                 accessToken: accessToken, //@pulkit4603 accessToken instead of token
-                refreshToken: refreshToken, //@pulkit4603 EXTRA FIELD: refreshToken
                 player1: fsTeamData.player1, //@pulkit4603 player1 instead of p1
                 player2: fsTeamData.player2, //@pulkit4603 player2 instead of p2
                 startDateTime: startDateTime,
                 currentClueIndex: rtTeamData.currentClueIndex, //@pulkit4603 currentClueIndex instead of currendClueNumber or ID
             });
             return;
-        }
     } catch (error) {
         res.json({
             status: "0",
@@ -109,27 +102,4 @@ export const login = async (req, res) => {
             error: `${error}`,
         });
     }
-};
-
-export const refresh = async (req, res) => {
-    const refreshToken = req.body.refreshToken;
-    if (!refreshToken)
-        return res.json({ status: "4", message: "Unauthorized" });
-
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.json({ status: "4", message: "Forbidden" });
-        fsGetTeamData(user.teamID).then((data) => {
-            if (refreshToken !== data.refreshToken) {
-                return res.json({ status: "4", message: "Forbidden" });
-            }
-
-            const newAccessToken = jwt.sign(
-                { userId: user.id },
-                process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "9999h" },
-            );
-
-            res.json({ status: "1", accessToken: newAccessToken });
-        });
-    });
 };
