@@ -13,7 +13,7 @@ const mutexes = {};
 for (let i = 0; i <= 400; i++) {
     let key = String(i).padStart(3, "0");
     mutexes[key] = new Mutex();
-} // create separate mutexes for each team
+} // creates separate mutexes for each team
 
 import { logger } from "../logger/winston";
 
