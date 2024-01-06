@@ -2,11 +2,11 @@
     "name": "techrace-2024",
     "version": "1.0.0",
     "description": "Techrace 2024 official app",
-    "main": "index.js",
+    "main": "app.js",
     "scripts": {
         "test": "jest",
-        "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/index.js",
-        "start": "node dist/index.js",
+        "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/app.js",
+        "start": "node dist/app.js",
         "build": "babel src -d dist",
         "format": "prettier --write \"src/**/*.js\""
     },

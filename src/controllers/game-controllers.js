@@ -6,7 +6,7 @@ import {
     rtUpdateRoute,
     rtUpdateTeamData,
 } from "../models";
-import config from "../config/game-config";
+import config from "../config.js";
 import utils from "../utils/game-utils";
 
 import moment from "moment";
