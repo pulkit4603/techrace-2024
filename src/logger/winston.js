@@ -7,8 +7,8 @@ export const logger = winston.createLogger({
         winston.format.printf(info => `{TIME:${info.timestamp} -- ${JSON.stringify(info.message)}}`)
     ),
     transports: [
-        new winston.transports.File({ filename: 'logfile.log' }),
-        new winston.transports.File({filename: 'error.log' , level: 'error'})
+        new winston.transports.File({ filename: './src/logger/logfile.log' }),
+        new winston.transports.File({filename: './src/logger/error.log' , level: 'error'})
     ],
     exitOnError: false
 });
