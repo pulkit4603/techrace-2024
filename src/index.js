@@ -1,6 +1,8 @@
 import express from "express";
+import "express-async-errors";
 import dotenv from "dotenv";
 import routes from "./routes";
+import { globalErrorHandler } from "./middleware/global-error-handler.js";
 
 dotenv.config();
 const app = express();
@@ -14,6 +16,7 @@ if (nodeEnv === "production") {
 
 app.use(express.json());
 app.use("/", routes);
+app.use(globalErrorHandler);
 
 app.get("/", (req, res) => {
     res.status(200).send("Hello from the TECHRACE Homepage\n- By Pupta & DVD.");
