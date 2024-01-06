@@ -4,7 +4,7 @@ import {
     rtNewUserSchema,
     rtUpdateUserSchema,
 } from "./user-schemas.js";
-import { loginSchema, refreshSchema } from "./login-schemas.js";
+import { loginSchema } from "./login-schemas.js";
 import {
     powerUpSchema,
     nextClueSchema,
@@ -19,7 +19,6 @@ export {
     rtUpdateUserSchema,
     //login schemas
     loginSchema,
-    refreshSchema,
     //game schemas
     powerUpSchema,
     nextClueSchema,

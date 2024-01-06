@@ -1,4 +1,4 @@
-import { firestoreDB } from "../../database";
+import { firestoreDB } from "../../services/firebase.js";
 const validDBNames = [
     "dev-teams",
     "dev-clues",
@@ -17,19 +17,13 @@ const validDBNames = [
  *  the result of the operation
  */
 export const fsAddData = async (docID, docData, DBName) => {
-    try {
-        if (!validDBNames.includes(DBName)) {
-            throw new Error("Invalid DB Name");
-        }
-        const DB = firestoreDB.collection(DBName);
-        const docRef = DB.doc(docID);
-        const result = await docRef.set(docData);
-        console.log(result);
-        return result;
-    } catch (error) {
-        console.error("Error adding document data: ", error);
-        throw error;
+    if (!validDBNames.includes(DBName)) {
+        throw new Error("Invalid DB Name");
     }
+    const DB = firestoreDB.collection(DBName);
+    const docRef = DB.doc(docID);
+    const result = await docRef.set(docData);
+    return result;
 };
 
 /**
@@ -41,15 +35,8 @@ export const fsAddData = async (docID, docData, DBName) => {
  * the result of the operation
  */
 export const fsGetData = async (docID, DBName) => {
-    try {
-        const DB = firestoreDB.collection(DBName);
-        const docRef = DB.doc(docID);
-        const result = await docRef.get();
-        if (!result.exists) {
-            return 0; //doesn't exist
-        }
-        return result.data();
-    } catch (error) {
-        console.error("Error fetching document data: ", error);
-    }
+    const DB = firestoreDB.collection(DBName);
+    const docRef = DB.doc(docID);
+    const result = await docRef.get();
+    return result.data();
 };

@@ -8,7 +8,7 @@ import {
     rtNewUser,
     rtUpdateUser,
 } from "./user-controllers.js";
-import { login, refresh } from "./login-controllers.js";
+import { login } from "./login-controllers.js";
 
 // game controllers:
 export { powerUp, nextClue, getHint };
@@ -25,4 +25,4 @@ export {
 };
 
 // login/auth controllers:
-export { login, refresh };
+export { login };
