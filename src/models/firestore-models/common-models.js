@@ -1,4 +1,4 @@
-import { firestoreDB } from "../../database";
+import { firestoreDB } from "../../services/firebase.js";
 const validDBNames = [
     "dev-teams",
     "dev-clues",

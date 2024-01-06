@@ -11,7 +11,7 @@ import utils from "../utils/game-utils";
 
 import moment from "moment";
 
-import { logger } from "../winston";
+import { logger } from "../services/winston.js";
 
 import { Mutex } from "async-mutex";
 const mutexes = {};

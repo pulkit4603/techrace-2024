@@ -1,4 +1,4 @@
-import { realtimeTeamDB } from "../../database";
+import { realtimeTeamDB } from "../../services/firebase.js";
 import { fsGetClueData } from "../firestore-models";
 
 /**

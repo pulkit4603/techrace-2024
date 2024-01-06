@@ -8,7 +8,7 @@ import {
     rtUpdateTeamData,
 } from "../models";
 
-import { logger } from "../winston";
+import { logger } from "../services/winston.js";
 
 export const fsNewUser = async (req, res) => {
     const data = req.body;

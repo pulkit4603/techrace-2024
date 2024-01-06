@@ -1,4 +1,4 @@
-import { realtimeDB } from "../../database";
+import { realtimeDB } from "../../services/firebase.js";
 const startDateTimeField = "dev-startDateTime";
 
 export const rtGetStartDateTime = async () => {
