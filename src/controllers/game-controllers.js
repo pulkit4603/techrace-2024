@@ -565,6 +565,7 @@ export const powerUp = async (req, res) => {
     const powerUpFunction = powerUpFunctions[powerUpID];
 
     if (powerUpFunction) {
+        //Lock the mutex of opponent team if opponent team is present else lock the mutex of team
         const lockID = payload.opponentTeamID ? payload.opponentTeamID : teamID;
         const release = await mutexes[lockID].acquire(); // lock the mutex
         try {
