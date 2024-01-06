@@ -75,5 +75,4 @@ export const login = async (req, res) => {
         startDateTime: startDateTime,
         currentClueIndex: rtTeamData.currentClueIndex, //@pulkit4603 currentClueIndex instead of currendClueNumber or ID
     });
-    return;
 };
