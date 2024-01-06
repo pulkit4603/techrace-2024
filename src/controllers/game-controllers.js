@@ -62,10 +62,8 @@ const futureUndo = async (teamID, payload, freeTimeInMilli) => {
 
 const checkIfDiscount = (teamData, costBeforeCoupon, powerUpName) => {
     console.log(powerUpName in teamData);
-    if (powerUpName in teamData) {
-        if (teamData[powerUpName] > 0) {
-            return 0;
-        }
+    if (powerUpName in teamData && teamData[powerUpName] > 0) {
+        return 0;
     }
     return costBeforeCoupon;
 };

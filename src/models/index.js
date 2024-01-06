@@ -5,7 +5,7 @@ import {
     fsGetClueData,
     fsAddClueData,
     fsUpdateTeamData,
-} from "./firestoreDBModels";
+} from "./firestore-models";
 import {
     rtGetClueData,
     rtGetRoute,
@@ -14,7 +14,7 @@ import {
     rtUpdateTeamData,
     rtGetStartDateTime,
     rtAddNewTeam,
-} from "./realtimeDBModels";
+} from "./realtime-models";
 
 export {
     //team models:
