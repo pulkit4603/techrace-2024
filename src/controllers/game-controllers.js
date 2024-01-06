@@ -6,53 +6,19 @@ import {
     rtUpdateRoute,
     rtUpdateTeamData,
 } from "../models";
-import moment from "moment";
+import config from "../config/game-config";
+import utils from "../utils/game-utils";
 
-import { Mutex } from "async-mutex";
-const mutexes = {};
-for (let i = 0; i <= 400; i++) {
-    let key = String(i).padStart(3, "0");
-    mutexes[key] = new Mutex();
-} // creates separate mutexes for each team
+import moment from "moment";
 
 import { logger } from "../logger/winston";
 
-import { objectify, swap } from "../utils/game-utils";
-
-const freezeTime = 10 * 60; //10 minutes
-const freezeCooldownDuration = 15 * 60; //15 minutes
-const invisibleTime = 10 * 60; //10 minutes
-const meterOffTime = 15 * 60; //15 minutes
-const numberOfRoutes = 2; //confirm with naman
-
-// freeze.  125
-// meterOff  100
-// invisible. 130
-// reverseFreeze. 175
-// skip location 225
-// add location 200
-// mysterycard 250
-
-const calculatePointsToAdd = (askTimestamp, previousClueSolvedAtTime) => {
-    const basePoints = 20;
-    const minusFrom = 60;
-    console.log(
-        moment(askTimestamp).diff(moment(previousClueSolvedAtTime), "minutes"),
-    );
-
-    const bonusPoints =
-        minusFrom -
-        moment(askTimestamp).diff(previousClueSolvedAtTime, "minutes");
-
-    console.log("bonusPoints");
-    console.log(bonusPoints);
-
-    let onClueUpPoints = basePoints + (bonusPoints < 0 ? 0 : bonusPoints);
-    console.log("onClueUpPoints");
-    console.log(onClueUpPoints); //80
-
-    return onClueUpPoints;
-};
+import { Mutex } from "async-mutex";
+const mutexes = {};
+for (let i = 0; i <= config.maxTeamID; i++) {
+    let key = String(i).padStart(3, "0");
+    mutexes[key] = new Mutex();
+} // creates separate mutexes for each team
 
 const futureUndo = async (teamID, payload, freeTimeInMilli) => {
     setTimeout(() => {
@@ -60,23 +26,19 @@ const futureUndo = async (teamID, payload, freeTimeInMilli) => {
     }, freeTimeInMilli);
 };
 
-const checkIfDiscount = (teamData, costBeforeCoupon, powerUpName) => {
-    console.log(powerUpName in teamData);
-    if (powerUpName in teamData && teamData[powerUpName] > 0) {
-        return 0;
-    }
-    return costBeforeCoupon;
-};
-
 const freezeTeam = async (teamID, payload, res) => {
     const teamData = await rtGetTeamData(teamID);
-    const costBeforeDiscount = 125;
-    const costOfReverseFreeze = 175;
+    const costBeforeDiscount = config.costFreezeTeam;
+    const costOfReverseFreeze = config.costReverseFreeze;
     const opponentTeamID = payload.opponentTeamID;
     const isForReverseFreeze = payload.isForReverseFreeze ? true : false;
     const cost = isForReverseFreeze
         ? costOfReverseFreeze
-        : checkIfDiscount(teamData, costBeforeDiscount, "freezeTeamCoupon");
+        : utils.checkIfDiscount(
+              teamData,
+              costBeforeDiscount,
+              "freezeTeamCoupon",
+          );
     if (cost > teamData.balance) {
         res.json({
             status: "3",
@@ -115,7 +77,7 @@ const freezeTeam = async (teamID, payload, res) => {
             moment(opponentData.madeFrozenAtTime),
             "seconds",
         ) <
-            freezeTime + freezeCooldownDuration
+            config.freezeTime + config.freezeCooldownDuration
     ) {
         res.json({
             status: "2",
@@ -144,7 +106,7 @@ const freezeTeam = async (teamID, payload, res) => {
         futureUndo(
             payload.opponentTeamID,
             { isFrozen: false },
-            freezeTime * 1000,
+            config.freezeTime * 1000,
         );
 
         res.json({
@@ -201,7 +163,7 @@ const invisible = async (teamID, payload, res) => {
         balance: updatedBalance,
         madeInvisibleAtTime: payload.askTimestamp,
     });
-    futureUndo(teamID, { isInvisible: false }, invisibleTime * 1000);
+    futureUndo(teamID, { isInvisible: false }, config.invisibleTime * 1000);
     res.json({
         status: "1",
         message: "You have become invisible for the next 10 minutes",
@@ -213,10 +175,10 @@ const invisible = async (teamID, payload, res) => {
 };
 
 const meterOff = async (teamID, payload, res) => {
-    const costBeforeDiscount = 100;
+    const costBeforeDiscount = config.costMeterOff;
     const opponentTeamID = payload.opponentTeamID;
     const teamData = await rtGetTeamData(teamID);
-    const cost = checkIfDiscount(
+    const cost = utils.checkIfDiscount(
         teamData,
         costBeforeDiscount,
         "meterOffCoupon",
@@ -251,7 +213,7 @@ const meterOff = async (teamID, payload, res) => {
     futureUndo(
         payload.opponentTeamID,
         { isMeterOff: false },
-        meterOffTime * 1000,
+        config.meterOffTime * 1000,
     );
     res.json({
         status: "1",
@@ -316,7 +278,7 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
             isFrozen: false,
             madeFrozenAtTime: moment()
                 .subtract(
-                    freezeTime + freezeCooldownDuration + 60 * 60,
+                    config.freezeTime + config.freezeCooldownDuration + 60 * 60,
                     "seconds",
                 )
                 .format(),
@@ -327,10 +289,10 @@ const reverseFreezeTeam = async (teamID, payload, res) => {
 
 //@pulkit-gpt to be discussed
 const skipLocation = async (teamID, payload, res) => {
-    const costBeforeDiscount = 225;
+    const costBeforeDiscount = config.costSkipLocation;
 
     let teamData = await rtGetTeamData(teamID);
-    const cost = checkIfDiscount(
+    const cost = utils.checkIfDiscount(
         teamData,
         costBeforeDiscount,
         "skipLocationCoupon",
@@ -409,10 +371,14 @@ const skipLocation = async (teamID, payload, res) => {
 };
 
 const addLocation = async (teamID, payload, res) => {
-    const costBeforeDiscount = 200;
+    const costBeforeDiscount = config.costAddLocation;
     const opponentTeamID = payload.opponentTeamID;
     let teamData = await rtGetTeamData(teamID);
-    let cost = checkIfDiscount(teamData, costBeforeDiscount, "addLocCoupon");
+    let cost = utils.checkIfDiscount(
+        teamData,
+        costBeforeDiscount,
+        "addLocCoupon",
+    );
 
     if (cost > teamData.balance) {
         res.json({
@@ -459,7 +425,7 @@ const addLocation = async (teamID, payload, res) => {
         let opponentRoute = await rtGetRoute(payload.opponentTeamID);
         let opponentRouteArray = Object.values(opponentRoute);
         let extraRoute =
-            opponentData.routeIndex + 1 > numberOfRoutes
+            opponentData.routeIndex + 1 > config.numberOfRoutes
                 ? opponentData.routeIndex - 1
                 : opponentData.routeIndex + 1;
         let extraLocation = `${extraRoute}-${opponentData.currentClueIndex}`;
@@ -470,7 +436,7 @@ const addLocation = async (teamID, payload, res) => {
         );
         rtUpdateRoute(
             payload.opponentTeamID,
-            objectify(opponentRouteArray, opponentRouteArray.length),
+            utils.objectify(opponentRouteArray, opponentRouteArray.length),
         );
 
         return;
@@ -478,10 +444,10 @@ const addLocation = async (teamID, payload, res) => {
 };
 
 const mysteryCard = async (teamID, payload, res) => {
-    const costBeforeDiscount = 250;
+    const costBeforeDiscount = config.costMysteryCard;
     const opponentTeamID = payload.opponentTeamID;
     let teamData = await rtGetTeamData(teamID);
-    let cost = checkIfDiscount(
+    let cost = utils.checkIfDiscount(
         teamData,
         costBeforeDiscount,
         "mysteryCardCoupon",
@@ -531,7 +497,7 @@ const mysteryCard = async (teamID, payload, res) => {
         rtUpdateTeamData(teamID, toUpdateSameTeam);
         let opponentRoute = await rtGetRoute(payload.opponentTeamID);
         let opponentRouteArray = Object.values(opponentRoute);
-        swap(
+        utils.swap(
             opponentRouteArray,
             opponentData.currentClueIndex,
             opponentData.currentClueIndex + 1,
@@ -539,7 +505,7 @@ const mysteryCard = async (teamID, payload, res) => {
 
         rtUpdateRoute(
             payload.opponentTeamID,
-            objectify(opponentRouteArray, opponentRouteArray.length),
+            utils.objectify(opponentRouteArray, opponentRouteArray.length),
         );
         return;
     }
@@ -599,7 +565,7 @@ export const nextClue = async (payload, res) => {
         });
         return;
     }
-    let onClueUpPoints = calculatePointsToAdd(
+    let onClueUpPoints = utils.calculatePointsToAdd(
         data.askTimestamp,
         teamData.previousClueSolvedAtTime,
     );
