@@ -13,7 +13,7 @@ const mutexes = {};
 for (let i = 0; i <= 400; i++) {
     let key = String(i).padStart(3, "0");
     mutexes[key] = new Mutex();
-} // create separate mutexes for each team
+} // creates separate mutexes for each team
 
 import { logger } from "../logger/winston";
 
@@ -62,10 +62,8 @@ const futureUndo = async (teamID, payload, freeTimeInMilli) => {
 
 const checkIfDiscount = (teamData, costBeforeCoupon, powerUpName) => {
     console.log(powerUpName in teamData);
-    if (powerUpName in teamData) {
-        if (teamData[powerUpName] > 0) {
-            return 0;
-        }
+    if (powerUpName in teamData && teamData[powerUpName] > 0) {
+        return 0;
     }
     return costBeforeCoupon;
 };
@@ -565,6 +563,7 @@ export const powerUp = async (req, res) => {
     const powerUpFunction = powerUpFunctions[powerUpID];
 
     if (powerUpFunction) {
+        //Lock the mutex of opponent team if opponent team is present else lock the mutex of team
         const lockID = payload.opponentTeamID ? payload.opponentTeamID : teamID;
         const release = await mutexes[lockID].acquire(); // lock the mutex
         try {

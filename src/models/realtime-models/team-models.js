@@ -1,5 +1,5 @@
 import { realtimeTeamDB } from "../../database";
-import { fsGetClueData } from "../firestoreDBModels";
+import { fsGetClueData } from "../firestore-models";
 
 /**
  * Takes in a clueIndex (like c1)
@@ -20,7 +20,7 @@ export const rtGetClueData = async (clueIndex, teamID) => {
         }
         return clueData;
     } catch (error) {
-        console.error("Error fetching clueData: ", error);
+        console.error("DB Error: ", error);
     }
 };
 
@@ -37,10 +37,8 @@ export const rtGetTeamData = async (teamID) => {
         }
         const teamData = snapShot.val();
         return teamData;
-    } catch {
-        (error) => {
-            console.error("Error fetching team data: ", error);
-        };
+    } catch (error) {
+        console.error("DB Error: ", error);
     }
 };
 
@@ -59,7 +57,7 @@ export const rtAddNewTeam = async (teamID, payload) => {
         }
         await realtimeTeamDB.child(teamID).update(payload);
     } catch (error) {
-        console.error("Error updating team data: ", error);
+        console.error("DB Error: ", error);
         throw error;
     }
 };
@@ -79,7 +77,7 @@ export const rtUpdateTeamData = async (teamID, payload) => {
         }
         await realtimeTeamDB.child(teamID).update(payload);
     } catch (error) {
-        console.error("Error updating team data: ", error);
+        console.error("DB Error: ", error);
         throw error;
     }
 };
@@ -99,7 +97,7 @@ export const rtGetRoute = async (teamID) => {
         return teamData ? teamData.route : null;
     } catch {
         (error) => {
-            console.error("Error fetching team data: ", error);
+            console.error("DB Error: ", error);
         };
     }
 };
