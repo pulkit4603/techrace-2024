@@ -1,5 +1,5 @@
 import { CustomError } from "../errors/custom.error";
-import { logger } from "../logger/winston.js";
+import { logger } from "../winston.js";
 import { StatusCodes } from "http-status-codes";
 
 export const globalErrorHandler = (err, req, res, _next) => {
