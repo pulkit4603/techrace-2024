@@ -4,6 +4,7 @@ import {
     rtGetStartDateTime,
     rtGetTeamData,
 } from "../models";
+import { StatusCodes } from "http-status-codes";
 import utils from "../utils/login-utils";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -46,7 +47,7 @@ export const login = async (req, res) => {
 
     const startDateTime = await rtGetStartDateTime();
 
-    res.json({
+    res.status(StatusCodes.OK).json({
         status: "1",
         message: "Login successful.",
         accessToken: accessToken, //@pulkit4603 accessToken instead of token
