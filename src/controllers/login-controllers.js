@@ -4,10 +4,9 @@ import {
     rtGetStartDateTime,
     rtGetTeamData,
 } from "../models";
-import { distanceFinder } from "../utils/distance-util";
+import utils from "../utils/login-utils";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { Exhausted, Unauthenticated, Unauthorized } from "../errors";
 dotenv.config();
 
 /**
@@ -22,37 +21,18 @@ export const login = async (req, res) => {
     const payload = req.body;
     const fsTeamData = await fsGetTeamData(payload.teamID);
 
-    if (fsTeamData == 0) {
-        throw new Unauthenticated("Team doesn't exist.", {
-            teamID: payload.teamID,
-        });
-    }
-    if (fsTeamData.isLoggedIn == true) {
-        throw new Exhausted("Team is already logged in.", {
-            teamID: payload.teamID,
-        });
-    }
-    if (payload.password != fsTeamData.password) {
-        throw new Unauthenticated("Incorrect password.", {
-            teamID: payload.teamID,
-        });
-    }
+    utils.validateTeamNotLoggedIn(fsTeamData, payload.teamID);
+    utils.validatePassword(fsTeamData, payload.password, payload.teamID);
 
     const rtTeamData = await rtGetTeamData(payload.teamID);
     //@pulkit4603 states not implemented yet
-    //when implemented, check if rtTeamData.state = "banned"
+    //when implemented, utils.validateTeamNotBanned(rtTeamData, payload.teamID);
     //if already registered onsite:
-    const distance = distanceFinder(
-        rtTeamData.logoutLocationLatitude,
-        rtTeamData.logoutLocationLongitude,
+    await utils.validateDistance(
         payload.currLat,
         payload.currLong,
+        payload.teamID,
     );
-    if (distance > 250) {
-        throw new Unauthorized("Cheating detected.", {
-            teamID: payload.teamID,
-        });
-    }
 
     // generate access token
     const accessToken = jwt.sign(
