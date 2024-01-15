@@ -1,4 +1,4 @@
-//game-config
+//game-config variables
 export default {
     freezeTime: 10 * 60, //10 minutes
     freezeCooldownDuration: 15 * 60, //15 minutes
