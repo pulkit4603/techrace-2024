@@ -29,11 +29,11 @@ export const login = async (req, res) => {
     //@pulkit4603 states not implemented yet
     //when implemented, utils.validateTeamNotBanned(rtTeamData, payload.teamID);
     //if already registered onsite:
-    await utils.validateDistance(
-        payload.currLat,
-        payload.currLong,
-        payload.teamID,
-    );
+    // await utils.validateDistance(
+    //     payload.currLat,
+    //     payload.currLong,
+    //     payload.teamID,
+    // );
 
     // generate access token
     const accessToken = jwt.sign(
