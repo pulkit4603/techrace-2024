@@ -1,3 +1,4 @@
+import { NotFound } from "../../errors/not-found.error.js";
 import { firestoreDB } from "../../services/firebase.js";
 const validDBNames = [
     "dev-teams",
@@ -38,5 +39,8 @@ export const fsGetData = async (docID, DBName) => {
     const DB = firestoreDB.collection(DBName);
     const docRef = DB.doc(docID);
     const result = await docRef.get();
+    if (!result.exists) {
+        throw new NotFound("Document not found");
+    }
     return result.data();
 };
