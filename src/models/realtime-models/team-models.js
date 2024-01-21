@@ -9,15 +9,26 @@ import { Exhausted, NotFound } from "../../errors";
  * @returns {Promise} promise that resolves with the clue data
  */
 export const rtGetClueData = async (clueIndex, teamID) => {
-    const snapShot = await realtimeTeamDB.child(teamID).once("value");
-    const teamData = snapShot.val();
-    const route = teamData ? teamData.route : null;
-    const clueID = route ? route[clueIndex] : null;
-    const clueData = fsGetClueData(clueID);
-    if (clueData == 0) {
-        throw new Exhausted("Clue not found.", { clueID: clueID });
+    try {
+        const snapShot = await realtimeTeamDB.child(teamID).once("value");
+        const teamData = snapShot.val();
+        if (!teamData) {
+            throw new NotFound("Team does not exist.", { teamID: teamID });
+        }
+        // console.log("teamData: ", teamData); @pulkit4603 dumb debug log
+        const route = teamData.route;
+        const clueID = route[clueIndex];
+        const clueData = fsGetClueData(clueID);
+        if (clueData == 0) {
+            throw new NotFound("Clue not found.", { clueID: clueID });
+        }
+        return clueData;
+    } catch (err) {
+        throw new NotFound("Clue not found.", {
+            teamID: teamID,
+            clueIndex: clueIndex,
+        });
     }
-    return clueData;
 };
 
 /**
