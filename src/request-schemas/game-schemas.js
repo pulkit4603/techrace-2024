@@ -24,6 +24,16 @@ export const nextClueSchema = yup.object().shape({
         .required(),
 });
 
+export const getClueSchema = yup.object().shape({
+    teamID: yup.string().required(),
+    askTimestamp: yup
+        .string()
+        .test("timestamp", "Must be a valid timestamp", (value) =>
+            moment(value, timestampFormat, true).isValid(),
+        )
+        .required(),
+});
+
 export const getHintSchema = yup.object().shape({
     teamID: yup.string().required(),
 });
