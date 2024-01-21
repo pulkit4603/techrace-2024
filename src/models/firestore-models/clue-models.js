@@ -3,11 +3,12 @@ import { NotFound } from "../../errors/not-found.error.js";
 const DBName = "dev-clues"; //@pulkit4603 dev-clues
 
 export const fsGetClueData = async (clueID) => {
-    const result = await fsGetData(clueID, DBName);
-    if (result === undefined) {
-        throw new NotFound("Clue not found.", { clueID: clueID });
+    try {
+        const result = await fsGetData(clueID, DBName);
+        return result;
+    } catch (err) {
+        throw new NotFound("Clue not found", { clueID: clueID });
     }
-    return result;
 };
 
 export const fsAddClueData = async (clueID, payload) => {
