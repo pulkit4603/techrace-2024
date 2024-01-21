@@ -7,6 +7,7 @@ import {
 import { loginSchema } from "./login-schemas.js";
 import {
     powerUpSchema,
+    getClueSchema,
     nextClueSchema,
     getHintSchema,
 } from "./game-schemas.js";
@@ -21,6 +22,7 @@ export {
     loginSchema,
     //game schemas
     powerUpSchema,
+    getClueSchema,
     nextClueSchema,
     getHintSchema,
 };
