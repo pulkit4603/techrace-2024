@@ -2,6 +2,7 @@ import express from "express";
 import { auth, validateRequest } from "../middleware";
 import {
     powerUpSchema,
+    getClueSchema,
     nextClueSchema,
     getHintSchema,
 } from "../request-schemas";
@@ -16,6 +17,7 @@ router.get("/", (req, res) => {
 
 router.post("/powerUp", auth, validateRequest(powerUpSchema), powerUp);
 router.post("/nextClue", auth, validateRequest(nextClueSchema), nextClue);
+router.post("/getClue", auth, validateRequest(getClueSchema), nextClue);
 router.post("/getHint", auth, validateRequest(getHintSchema), getHint);
 
 export default router;
