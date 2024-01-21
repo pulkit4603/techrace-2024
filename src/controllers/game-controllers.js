@@ -14,6 +14,7 @@ import moment from "moment";
 import { logger } from "../services/winston.js";
 
 import { Mutex } from "async-mutex";
+import { Exhausted } from "../errors/exhausted.error.js";
 const mutexes = {};
 for (let i = 0; i <= config.maxTeamID; i++) {
     let key = String(i).padStart(3, "0");
@@ -555,21 +556,50 @@ export const nextClue = async (payload, res) => {
     let teamData = await rtGetTeamData(teamID);
     if (teamData.currentClueIndex == 13) {
         //@pulkit-gpt check for teams w/ extra location
-        res.json({
-            status: "0",
-            message: "You have reached the final location.",
-        });
-        logger.log({
-            level: "error",
-            message: `You have reached the final location for team ${teamID}`,
-        });
-        return;
+        throw new Exhausted("You have reached the final location.");
     }
     let onClueUpPoints = utils.calculatePointsToAdd(
         data.askTimestamp,
         teamData.previousClueSolvedAtTime,
     );
     teamData.currentClueIndex += 1;
+    rtUpdateTeamData(teamID, {
+        currentClueIndex: teamData.currentClueIndex,
+        previousClueSolvedAtTime: data.askTimestamp,
+        balance: teamData.balance + onClueUpPoints,
+        hint1: "-999",
+        hint2: "-999",
+    });
+    //@pulkit-gpt to be discussed
+    let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
+    let clueSent = {
+        clue: clueData.clue,
+        clueType: clueData.clueType,
+        targetLocationLatitude: clueData.targetLocationLatitude,
+        targetLocationLongitude: clueData.targetLocationLongitude,
+    };
+
+    res.json({
+        status: "1",
+        message: "Clue Data",
+        clueData: clueSent,
+    });
+    logger.log({ level: "info", message: `Clue Data for team ${teamID}` });
+    return;
+};
+
+export const getClue = async (payload, res) => {
+    let data = payload.body;
+    let teamID = data.teamID;
+    let teamData = await rtGetTeamData(teamID);
+    if (teamData.currentClueIndex == 13) {
+        //@pulkit-gpt check for teams w/ extra location
+        throw new Exhausted("You have reached the final location.");
+    }
+    let onClueUpPoints = utils.calculatePointsToAdd(
+        data.askTimestamp,
+        teamData.previousClueSolvedAtTime,
+    );
     rtUpdateTeamData(teamID, {
         currentClueIndex: teamData.currentClueIndex,
         previousClueSolvedAtTime: data.askTimestamp,
