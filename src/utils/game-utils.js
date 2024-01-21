@@ -68,9 +68,49 @@ const checkIfDiscount = (teamData, costBeforeCoupon, powerUpName) => {
     return costBeforeCoupon;
 };
 
+/**
+ * @param {object} teamData - Includes teamID and balance
+ * @param {number} cost
+ * @param {number} powerUpIndex\
+ * Validates if the balance is sufficient or not
+ */
+const validateBalance = (teamData, cost, powerUpIndex) => {
+    if (teamData.balance < cost) {
+        throw new Unauthorized("Insufficient Balance", {
+            teamID: teamData.teamID,
+            powerUpName: config.powerUpNames[powerUpIndex],
+            balance: teamData.balance,
+        });
+    }
+};
+
+/**
+ * @param {number} teamID
+ * @param {number} opponentTeamID
+ * @param {boolean} isPowerUpExhausted
+ * @param {number} powerUpIndex\
+ * Validates if the power up is exhausted or not
+ */
+const validatePowerUpState = (
+    teamID,
+    opponentTeamID,
+    isPowerUpExhausted,
+    powerUpIndex,
+) => {
+    if (isPowerUpExhausted) {
+        throw new Exhausted("Power Up Already Exhausted", {
+            teamID: teamID,
+            powerUp: config.powerUpNames[powerUpIndex],
+            opponentTeamID: opponentTeamID,
+        });
+    }
+};
+
 export default {
     objectify,
     swap,
     calculatePointsToAdd,
     checkIfDiscount,
+    validateBalance,
+    validatePowerUpState,
 };
