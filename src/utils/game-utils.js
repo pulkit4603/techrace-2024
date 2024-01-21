@@ -1,5 +1,12 @@
 import moment from "moment";
+import { Exhausted, Unauthorized } from "../errors";
+import config from "../config";
 
+/**
+ * @param {array} arr
+ * @param {number} n\
+ * Converts an array to an object
+ */
 const objectify = (arr, n) => {
     let obj = {};
     for (let i = 0; i < n; i++) {
@@ -8,12 +15,23 @@ const objectify = (arr, n) => {
     return obj;
 };
 
+/**
+ * @param {array} arr
+ * @param {number} i
+ * @param {number} j\
+ * Swaps the elements of the array
+ */
 const swap = (arr, i, j) => {
     let temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
 };
 
+/**
+ * @param {number} askTimestamp
+ * @param {number} previousClueSolvedAtTime\
+ * Calculates the points to be added to the team
+ */
 const calculatePointsToAdd = (askTimestamp, previousClueSolvedAtTime) => {
     const basePoints = 20;
     const minusFrom = 60;
@@ -35,6 +53,13 @@ const calculatePointsToAdd = (askTimestamp, previousClueSolvedAtTime) => {
     return onClueUpPoints;
 };
 
+/**
+ * @param {object} teamData
+ * @param {number} costBeforeCoupon
+ * @param {string} powerUpName\
+ * Checks if the team has a discount coupon or not.\
+ * If yes, then returns 0; else returns the costBeforeCoupon.
+ */
 const checkIfDiscount = (teamData, costBeforeCoupon, powerUpName) => {
     console.log(powerUpName in teamData);
     if (powerUpName in teamData && teamData[powerUpName] > 0) {
