@@ -9,8 +9,10 @@ export const auth = async (req, res, next) => {
         const token = req.headers.authorization.split(" ")[1];
 
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        if (req.teamID !== decoded.teamID)
+
+        if (req.body.teamID !== decoded.teamID) {
             throw new Unauthenticated("Invalid Token");
+        }
 
         next();
     } catch (error) {

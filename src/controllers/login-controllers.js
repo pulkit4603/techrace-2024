@@ -43,6 +43,7 @@ export const login = async (req, res) => {
     );
 
     fsTeamData.isLoggedIn = true;
+    fsTeamData.accessToken = accessToken; //@pulkit4603 accessToken in firestore for debugging (dumb i know)
     await fsUpdateTeamData(payload.teamID, fsTeamData);
 
     const startDateTime = await rtGetStartDateTime();
