@@ -5,6 +5,8 @@ import {
     fsGetClueData,
     fsAddClueData,
     fsUpdateTeamData,
+    fsGetVolunteerData,
+    fsUpdateVolunteerData,
 } from "./firestore-models";
 import {
     rtGetClueData,
@@ -26,6 +28,9 @@ export {
     //clue models:
     fsGetClueData,
     fsAddClueData,
+    //volunteer models:
+    fsGetVolunteerData,
+    fsUpdateVolunteerData,
 };
 export {
     //only use RTDB:
