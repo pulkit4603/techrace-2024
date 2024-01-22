@@ -3,10 +3,10 @@ import { firestoreDB } from "../../services/firebase.js";
 const validDBNames = [
     "dev-teams",
     "dev-clues",
-    "dev-routes",
+    "dev-volunteers",
     "teams",
     "clues",
-    "routes",
+    "volunteers",
 ];
 /**
  * Add a new document to the database or update an existing document's data
