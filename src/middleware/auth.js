@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { Unauthenticated } from "../errors";
 
 dotenv.config();
 
@@ -8,13 +9,11 @@ export const auth = async (req, res, next) => {
         const token = req.headers.authorization.split(" ")[1];
 
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        req.teamID = decoded ? decoded.teamID : null;
+        if (req.teamID !== decoded.teamID)
+            throw new Unauthenticated("Invalid Token");
 
         next();
     } catch (error) {
-        res.json({
-            status: "4",
-            message: "Unauthorized",
-        });
+        throw new Unauthenticated("Invalid Token");
     }
 };
