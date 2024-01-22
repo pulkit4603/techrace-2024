@@ -596,17 +596,6 @@ export const getClue = async (payload, res) => {
         //@pulkit-gpt check for teams w/ extra location
         throw new Exhausted("You have reached the final location.");
     }
-    let onClueUpPoints = utils.calculatePointsToAdd(
-        data.askTimestamp,
-        teamData.previousClueSolvedAtTime,
-    );
-    rtUpdateTeamData(teamID, {
-        currentClueIndex: teamData.currentClueIndex,
-        previousClueSolvedAtTime: data.askTimestamp,
-        balance: teamData.balance + onClueUpPoints,
-        hint1: "-999",
-        hint2: "-999",
-    });
     //@pulkit-gpt to be discussed
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
     let clueSent = {
