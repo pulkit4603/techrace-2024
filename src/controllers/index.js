@@ -9,6 +9,7 @@ import {
     rtUpdateUser,
 } from "./user-controllers.js";
 import { login } from "./login-controllers.js";
+import { volnteerLogin } from "./volunteer-controllers.js";
 
 // game controllers:
 export { powerUp, getClue, nextClue, getHint };
@@ -26,3 +27,6 @@ export {
 
 // login/auth controllers:
 export { login };
+
+// volunteer controllers:
+export { volnteerLogin };
