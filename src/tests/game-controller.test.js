@@ -1,15 +1,5 @@
 // powerUps.test.js
-import {
-    freezeTeam,
-    meterOff,
-    invisible,
-    reverseFreezeTeam,
-    skipLocation,
-    addLocation,
-    mysteryCard,
-    nextClue,
-    getHint,
-} from "../controllers/game-controllers";
+import { nextClue, getHint } from "../controllers/game-controllers";
 
 import { rtGetTeamData, rtUpdateTeamData, rtGetClueData } from "../models";
 
