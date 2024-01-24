@@ -1,14 +1,3 @@
-// Pseudo Code:
-// Take in volunteerID, password, currLat, currLong
-// validate not logged in
-// validate password
-// validate distance from site
-// returns accessToken, list of teamIDs
-
-// Data flow:
-// 1. fetch volunteer data from firestore
-// 2. once done logging in, update isLoggedIn to true in firestore
-// 3. give accessToken to client
 import { fsGetVolunteerData, fsUpdateVolunteerData } from "../models";
 import utils from "../utils/login-utils";
 // import { allTeams } from "../config"; @pulkit4603 @Jsh-Agarwal needed?
