@@ -10,6 +10,7 @@ import {
     getClueSchema,
     nextClueSchema,
     getHintSchema,
+    stateChangeSchema,
 } from "./game-schemas.js";
 import { volunteerLoginSchema } from "./volunteer-schemas.js";
 
@@ -28,4 +29,6 @@ export {
     getHintSchema,
     //volunteer schemas
     volunteerLoginSchema,
+    //state change schema
+    stateChangeSchema,
 };
