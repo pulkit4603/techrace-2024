@@ -554,7 +554,7 @@ export const nextClue = async (payload, res) => {
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
-    if (teamData.status == "Finished") {
+    if (teamData.state == "Finished") {
         //@pulkit-gpt check for teams w/ extra location
         throw new Exhausted("You have Finished the game.");
     } else if (`c${teamData.currentClueIndex + 1}` in teamData.route) {
@@ -595,7 +595,7 @@ export const getClue = async (payload, res) => {
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
-    if (teamData.status == "finished") {
+    if (teamData.state == "finished") {
         throw new Exhausted("You have finsihed the game.");
     }
     //@pulkit-gpt to be discussed
@@ -671,4 +671,13 @@ export const getHint = async (req, res) => {
         });
         return;
     }
+};
+
+export const stateChange = async (req, res) => {
+    let teamID = req.body.teamID;
+    rtUpdateTeamData(teamID, { state: "playing" });
+    res.json({
+        status: "1",
+        message: "State changed",
+    });
 };
