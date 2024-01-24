@@ -1,4 +1,10 @@
-import { powerUp, getClue, nextClue, getHint } from "./game-controllers.js";
+import {
+    powerUp,
+    getClue,
+    nextClue,
+    getHint,
+    stateChange,
+} from "./game-controllers.js";
 import {
     fsNewUser,
     fsGetUser,
@@ -10,9 +16,8 @@ import {
 } from "./user-controllers.js";
 import { login } from "./login-controllers.js";
 import { volunteerLogin } from "./volunteer-controllers.js";
-
 // game controllers:
-export { powerUp, getClue, nextClue, getHint };
+export { powerUp, getClue, nextClue, getHint, stateChange };
 
 // user controllers:
 export {
@@ -27,6 +32,4 @@ export {
 
 // login/auth controllers:
 export { login };
-
-// volunteer controllers:
 export { volunteerLogin };

@@ -37,3 +37,7 @@ export const getClueSchema = yup.object().shape({
 export const getHintSchema = yup.object().shape({
     teamID: yup.string().required(),
 });
+
+export const stateChangeSchema = yup.object().shape({
+    teamID: yup.string().required(),
+});
