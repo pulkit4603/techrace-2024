@@ -15,7 +15,10 @@ import {
     rtUpdateUser,
 } from "./user-controllers.js";
 import { login } from "./login-controllers.js";
-import { volunteerLogin } from "./volunteer-controllers.js";
+import {
+    volunteerLogin,
+    volunteerValidateRequest,
+} from "./volunteer-controllers.js";
 // game controllers:
 export { powerUp, getClue, nextClue, getHint, stateChange };
 
@@ -32,4 +35,4 @@ export {
 
 // login/auth controllers:
 export { login };
-export { volunteerLogin };
+export { volunteerLogin, volunteerValidateRequest };
