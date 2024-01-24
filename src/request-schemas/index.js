@@ -12,7 +12,10 @@ import {
     getHintSchema,
     stateChangeSchema,
 } from "./game-schemas.js";
-import { volunteerLoginSchema } from "./volunteer-schemas.js";
+import {
+    volunteerLoginSchema,
+    volunteerValidateRequestSchema,
+} from "./volunteer-schemas.js";
 
 export {
     //user schemas
@@ -31,4 +34,6 @@ export {
     volunteerLoginSchema,
     //state change schema
     stateChangeSchema,
+    //volunteer validator schema
+    volunteerValidateRequestSchema,
 };
