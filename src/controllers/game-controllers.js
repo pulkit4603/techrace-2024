@@ -554,15 +554,18 @@ export const nextClue = async (payload, res) => {
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
-    if (teamData.currentClueIndex == 13) {
+    if (teamData.state == "Finished") {
         //@pulkit-gpt check for teams w/ extra location
-        throw new Exhausted("You have reached the final location.");
+        throw new Exhausted("You have Finished the game.");
+    } else if (`c${teamData.currentClueIndex + 1}` in teamData.route) {
+        throw new Exhausted("You have reached the Final Location.");
     }
     let onClueUpPoints = utils.calculatePointsToAdd(
         data.askTimestamp,
         teamData.previousClueSolvedAtTime,
     );
     teamData.currentClueIndex += 1;
+
     rtUpdateTeamData(teamID, {
         currentClueIndex: teamData.currentClueIndex,
         previousClueSolvedAtTime: data.askTimestamp,
@@ -592,9 +595,8 @@ export const getClue = async (payload, res) => {
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
-    if (teamData.currentClueIndex == 13) {
-        //@pulkit-gpt check for teams w/ extra location
-        throw new Exhausted("You have reached the final location.");
+    if (teamData.state == "finished") {
+        throw new Exhausted("You have finsihed the game.");
     }
     //@pulkit-gpt to be discussed
     let clueData = await rtGetClueData(`c${teamData.currentClueIndex}`, teamID);
@@ -669,4 +671,13 @@ export const getHint = async (req, res) => {
         });
         return;
     }
+};
+
+export const stateChange = async (req, res) => {
+    let teamID = req.body.teamID;
+    rtUpdateTeamData(teamID, { state: "playing" });
+    res.json({
+        status: "1",
+        message: "State changed",
+    });
 };
