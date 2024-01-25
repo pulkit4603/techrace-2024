@@ -43,13 +43,23 @@ export const volunteerLogin = async (req, res) => {
     });
 };
 
+const isDM = true;
+
 export const volunteerValidateRequest = async (req, res) => {
     let teamID = req.body.teamID;
     let teamData = await rtGetTeamData(teamID);
-    if (
+    const cond =
         req.body.validatorClueID !=
-        teamData.route[`c${teamData.currentClueIndex}`]
-    ) {
+        teamData.route[`c${teamData.currentClueIndex}`];
+    if (isDM) {
+        console.log("cond", cond);
+        console.log("req.body.validatorClueID", req.body.validatorClueID);
+        console.log(
+            "teamData.route[`c${teamData.currentClueIndex}`]",
+            teamData.route[`c${teamData.currentClueIndex}`],
+        );
+    }
+    if (cond) {
         throw new Unauthorized("You are not the correct location.");
     } else {
         if (teamData.isFrozen) {
@@ -70,9 +80,16 @@ export const volunteerValidateRequest = async (req, res) => {
                     validatorClueID: req.body.validatorClueID,
                 });
             }, validateTime);
+            if (isDM) {
+                console.log(
+                    "req.body.validatorClueID tring to validate after timeout",
+                    req.body.validatorClueID,
+                );
+            }
             res.json({
                 status: 1,
                 message: "Correct location after timeout",
+                mm: "F",
             });
             logger.log({
                 level: "info",
@@ -80,11 +97,20 @@ export const volunteerValidateRequest = async (req, res) => {
             });
         } else {
             rtUpdateTeamData(teamID, {
-                validatorClueID: req.body.validatorClueID,
+                validatorClueID:
+                    // req.body.validatorClueID + new Date().toISOString(),
+                    req.body.validatorClueID,
             });
+            if (isDM) {
+                console.log(
+                    "req.body.validatorClueID tring to validate",
+                    req.body.validatorClueID,
+                );
+            }
             res.json({
                 status: 1,
                 message: "Correct location",
+                mm: "U",
             });
             logger.log({
                 level: "info",
