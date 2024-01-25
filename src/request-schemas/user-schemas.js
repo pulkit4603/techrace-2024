@@ -24,7 +24,7 @@ export const fsAddClueSchema = yup.object().shape({
         .test(
             "latitude",
             "Must be a valid latitude",
-            (value) => value >= -90 && value <= 90,
+            (value) => value >= -180 && value <= 180,
         )
         .required(),
     targetLocationLongitude: yup
@@ -32,7 +32,7 @@ export const fsAddClueSchema = yup.object().shape({
         .test(
             "longitude",
             "Must be a valid longitude",
-            (value) => value >= -90 && value <= 90,
+            (value) => value >= -180 && value <= 180,
         )
         .required(),
 });
@@ -58,7 +58,7 @@ export const rtNewUserSchema = yup.object().shape({
         .test(
             "latitude",
             "Must be a valid latitude",
-            (value) => value >= -90 && value <= 90,
+            (value) => value >= -180 && value <= 180,
         )
         .required(),
     logoutLocationLongitude: yup
@@ -66,7 +66,7 @@ export const rtNewUserSchema = yup.object().shape({
         .test(
             "longitude",
             "Must be a valid longitude",
-            (value) => value >= -90 && value <= 90,
+            (value) => value >= -180 && value <= 180,
         )
         .required(),
     madeFrozenAtTime: yup
@@ -118,14 +118,14 @@ export const rtUpdateUserSchema = yup
             .test(
                 "latitude",
                 "Must be a valid latitude",
-                (value) => value >= -90 && value <= 90,
+                (value) => value >= -180 && value <= 180,
             ),
         logoutLocationLongitude: yup
             .string()
             .test(
                 "longitude",
                 "Must be a valid longitude",
-                (value) => value >= -90 && value <= 90,
+                (value) => value >= -180 && value <= 180,
             ),
         madeFrozenAtTime: yup
             .string()

@@ -8,7 +8,7 @@ export const loginSchema = yup.object().shape({
         .test(
             "latitude",
             "Must be a valid latitude",
-            (value) => value >= -90 && value <= 90,
+            (value) => value >= -180 && value <= 180,
         )
         .required(),
     currLong: yup
@@ -16,7 +16,7 @@ export const loginSchema = yup.object().shape({
         .test(
             "longitude",
             "Must be a valid longitude",
-            (value) => value >= -90 && value <= 90,
+            (value) => value >= -180 && value <= 180,
         )
         .required(),
 });
