@@ -550,14 +550,18 @@ export const powerUp = async (req, res) => {
     }
 };
 
+const isDm = true;
 export const nextClue = async (payload, res) => {
+    if (isDm) {
+        console.log("here in nextclue");
+    }
     let data = payload.body;
     let teamID = data.teamID;
     let teamData = await rtGetTeamData(teamID);
     if (teamData.state == "Finished") {
         //@pulkit-gpt check for teams w/ extra location
         throw new Exhausted("You have Finished the game.");
-    } else if (`c${teamData.currentClueIndex + 1}` in teamData.route) {
+    } else if (!(`c${teamData.currentClueIndex + 1}` in teamData.route)) {
         throw new Exhausted("You have reached the Final Location.");
     }
     let onClueUpPoints = utils.calculatePointsToAdd(
