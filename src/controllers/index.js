@@ -14,7 +14,7 @@ import {
     rtNewUser,
     rtUpdateUser,
 } from "./user-controllers.js";
-import { login } from "./login-controllers.js";
+import { login, logout } from "./login-controllers.js";
 import {
     volunteerLogin,
     volunteerValidateRequest,
@@ -34,5 +34,5 @@ export {
 };
 
 // login/auth controllers:
-export { login };
+export { login, logout };
 export { volunteerLogin, volunteerValidateRequest };
