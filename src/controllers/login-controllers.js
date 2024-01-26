@@ -3,6 +3,7 @@ import {
     fsUpdateTeamData,
     rtGetStartDateTime,
     rtGetTeamData,
+    rtUpdateTeamData,
 } from "../models";
 import { StatusCodes } from "http-status-codes";
 import utils from "../utils/login-utils";
@@ -56,5 +57,28 @@ export const login = async (req, res) => {
         player2: fsTeamData.player2, //@pulkit4603 player2 instead of p2
         startDateTime: startDateTime,
         currentClueIndex: rtTeamData.currentClueIndex, //@pulkit4603 currentClueIndex instead of currendClueNumber or ID
+    });
+};
+
+/**
+ * Logs a team out.
+ * @param {Object} req.body - {teamID, currLat, currLong}
+ * @param {Object} res - {status, message}
+ * @returns {Promise<Object>} - A promise that resolves when the response is sent.
+ * @throws {Error} - If an error occurs while logging out.
+ */
+export const logout = async (req, res) => {
+    const payload = req.body;
+    const fsTeamData = await fsGetTeamData(payload.teamID);
+
+    fsTeamData.isLoggedIn = false;
+    await fsUpdateTeamData(payload.teamID, fsTeamData);
+    await rtUpdateTeamData(payload.teamID, {
+        logoutLocationLatitude: payload.currLat,
+        logoutLocationLongitude: payload.currLong,
+    });
+    res.status(StatusCodes.OK).json({
+        status: "Success",
+        message: "Logout successful.",
     });
 };
