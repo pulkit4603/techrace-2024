@@ -609,6 +609,7 @@ export const getClue = async (payload, res) => {
         clueType: clueData.clueType,
         targetLocationLatitude: clueData.targetLocationLatitude,
         targetLocationLongitude: clueData.targetLocationLongitude,
+        routeID: teamData.route[`c${teamData.currentClueIndex}`],
     };
 
     res.json({
