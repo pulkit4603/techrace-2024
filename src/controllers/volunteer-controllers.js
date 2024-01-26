@@ -73,6 +73,7 @@ export const volunteerValidateRequest = async (req, res) => {
             res.json({
                 status: 1,
                 message: "Correct location after timeout",
+                mm: "F",
             });
             logger.log({
                 level: "info",
@@ -85,6 +86,7 @@ export const volunteerValidateRequest = async (req, res) => {
             res.json({
                 status: 1,
                 message: "Correct location",
+                mm: "U",
             });
             logger.log({
                 level: "info",
