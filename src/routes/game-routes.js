@@ -14,7 +14,6 @@ import {
     getHint,
     stateChange,
 } from "../controllers";
-//import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
