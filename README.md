@@ -1,7 +1,6 @@
 # TechRace 2024
 The official TechRace 2024 App for the TechRace 2024 Oculus Event of Sardar Patel Institute of Technology.<br>
 TechRace is a treasure hunt kind of a event scaled across entire Mumbai.<br>
-<a href="https://www.instagram.com/techrace2023">TechRace 2023 Instagram Page<a><br>
   
   ## What is TechRace?<br>
 You have to crack clues shown on the app and find out the correct location.<br>
