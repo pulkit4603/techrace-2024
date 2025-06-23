@@ -23,6 +23,8 @@ Abhinav Pandey<a href="https://github.com/cottonTomato">(GitHub)</a>
 <img src="https://github.com/user-attachments/assets/28c89ea8-5aa0-48b6-8551-41228bc90592" width="300"/>
 <img src="https://github.com/user-attachments/assets/120097d2-58ce-43f8-bc96-0c42f5bbb48d" width="300"/>
 <img src="https://github.com/user-attachments/assets/a3ef36eb-5419-404e-8397-cb1366a1b369" width="300"/>
+<img src="https://github.com/user-attachments/assets/2d1f179c-5124-47a2-9abb-c60ad1d4a01e" width="300"/>
+<img src="https://github.com/user-attachments/assets/d012652c-5e13-4b26-b2c0-e4d42585d9cd" width="300"/>
 
 
 # The Team
