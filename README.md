@@ -9,7 +9,7 @@ The team to crack all the clues first wins the race.
 
 
 ## Technologies Used
-  - React Native for IOS and Android application
+  - Flutter for IOS and Android application
   - ExpressJS for server and REST API
   - Firebase Realtime Database for game data
   - Firebase Firestore Database for login data
