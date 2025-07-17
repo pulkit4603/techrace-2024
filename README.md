@@ -16,7 +16,7 @@ The team to crack all the clues first wins the race.
 
 # Contributors of the App
 Pulkit Dwivedi <a href="https://github.com/pulkit4603">(GitHub)</a>
-Abhinav Pandey<a href="https://github.com/cottonTomato">(GitHub)</a>
+Pulkit Dwivedi <a href="https://github.com/pulkit_gpt">(GitHub)</a>
 
 # Screenshots of the TechRace 2024 App
 <img src="https://github.com/user-attachments/assets/77cf6857-2025-4ae4-a832-d48e01f2f4a5" width="300"/>
