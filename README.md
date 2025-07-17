@@ -15,8 +15,8 @@ The team to crack all the clues first wins the race.
   - Firebase Firestore Database for login data
 
 # Contributors of the App
-Pulkit Dwivedi <a href="https://github.com/pulkit4603">(GitHub)</a>
-Pulkit Dwivedi <a href="https://github.com/pulkit_gpt">(GitHub)</a>
+Pulkit Dwivedi <a href="https://github.com/pulkit4603">(GitHub)</a> <br/>
+Pulkit Gupta <a href="https://github.com/pulkit-gpt">(GitHub)</a>
 
 # Screenshots of the TechRace 2024 App
 <img src="https://github.com/user-attachments/assets/77cf6857-2025-4ae4-a832-d48e01f2f4a5" width="300"/>
